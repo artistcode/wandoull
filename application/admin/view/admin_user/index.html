@@ -1,0 +1,330 @@
+{include file='common/doc'}
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: none;">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">登录名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="loginname" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">手机</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="telphone" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="email" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">角色</label>
+                    <div class="layui-input-block">
+                        <select name="role">
+                            <option value="0">管理员</option>
+                            <option value="1">超级管理员</option>
+                            <option value="2">纠错员</option>
+                            <option value="3">采购员</option>
+                            <option value="4">推销员</option>
+                            <option value="5">运营人员</option>
+                            <option value="6">编辑</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <table id="table_list" lay-filter="table_list"></table>
+            <script type="text/html" id="buttonTpl">
+                {{#  if(d.status == 1){ }}
+                <button class="layui-btn layui-btn-xs">已审核</button>
+                {{#  } else { }}
+                <button class="layui-btn layui-btn-primary layui-btn-xs">未审核</button>
+                {{#  } }}
+            </script>
+            <script type="text/html" id="sex">
+                {{#  if(d.sex == 1){ }}
+                <button class="layui-btn layui-btn-xs">男</button>
+                {{#  } else { }}
+                <button class="layui-btn layui-btn-primary layui-btn-xs">女</button>
+                {{#  } }}
+            </script>
+            <script type="text/html" id="op_table">
+
+                {{#  if(d.admin_id ==1){ }}
+                <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                {{#  } else { }}
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>删除</a>
+                {{#  } }}
+            </script>
+            <template id="table_toolbar">
+                <div class="layui-btn-group">
+                    <button type="button" lay-event="add" class="layui-btn layui-btn-primary layui-btn-sm">
+                        <i class="layui-icon layui-icon-add-1"></i>
+                    </button>
+                    <button type="button" lay-event="search_sh" class="layui-btn layui-btn-primary layui-btn-sm">
+                        <i class="layui-icon layui-icon-search "></i>
+                    </button>
+                </div>
+            </template>
+        </div>
+    </div>
+</div>
+<template id="form_template_add" style="display: none">
+    <form class="layui-form" action="" style="margin-top:10px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">昵称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="admin_nickname" required lay-verify="required" lay-reqText="昵称不能为空"
+                       lay-verType="tips"
+                       placeholder="请输入昵称"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">昵称列:张三,李四</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户组</label>
+            <div class="layui-input-inline">
+                <select name="admin_group" lay-verify="">
+                    <option value="">请选择</option>
+                    <option value="1">销售</option>
+                    <option value="2">技术</option>
+                </select>
+            </div>
+            <div class="layui-form-mid layui-word-aux">必选项</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="admin_account" required lay-verify="required" lay-reqText="账号不能为空"
+                       lay-verType="tips"
+                       placeholder="请收入账号"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">必填项 列:132324,abcsfd</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-inline">
+                <input type="text" name="admin_passwd" required lay-verify="required" lay-reqText="密码不能为空"
+                       lay-verType="tips"
+                       placeholder="请输入密码"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">列:1324sdfs</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">确认密码</label>
+            <div class="layui-input-inline">
+                <input type="text" name="repasswd" required lay-verify="required" lay-reqText="昵称不能为空"
+                       lay-verType="tips"
+                       placeholder="请输入确认密码"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="sex" value="1" title="男" checked>
+                <input type="radio" name="sex" value="2" title="女">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" name="status" lay-skin="switch" lay-text="已审核|禁用">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea name="remarks" placeholder="请输入描述内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="form_submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</template>
+<template id="form_template_edit">
+    <form class="layui-form" action="" id="form" lay-filter="form" style="margin-top:10px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">昵称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="admin_nickname" required lay-verify="required" lay-reqText="昵称不能为空"
+                       lay-verType="tips"
+                       placeholder="请输入昵称"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">昵称列:张三,李四</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户组</label>
+            <div class="layui-input-inline">
+                <select name="admin_group" lay-verify="">
+                    <option value="">请选择</option>
+                    <option value="1">销售</option>
+                    <option value="2">技术</option>
+                </select>
+            </div>
+            <div class="layui-form-mid layui-word-aux">必选项</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="sex" value="1" title="男" checked>
+                <input type="radio" name="sex" value="2" title="女">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" name="status" lay-skin="switch" lay-text="已审核|禁用">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea name="remarks" placeholder="请输入描述内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="form_submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</template>
+<script src="/layuiadmin/layui/layui.js"></script>
+</body>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index' ,'table'] ,function () {
+        var $ = layui.$
+            ,form = layui.form
+            ,table = layui.table;
+        table.render({
+            elem: '#table_list'
+            ,height: 'full-50'
+            ,toolbar: '#table_toolbar'
+            ,url: 'read' //数据接口
+            ,page: true //开启分页
+            ,limit:20
+            ,cols: [
+                [ //表头
+                    {type: 'checkbox' ,fixed: 'left'} ,
+                    {type: 'numbers' ,fixed: 'left'}
+                    ,{field: 'admin_nickname' ,align: "center" ,title: '昵称'}
+                    ,{field: 'admin_account' ,align: "center" ,title: '用户名'}
+                    ,{field: 'addtime' ,title: '添加时间' ,sort: true}
+                    ,{field: 'sex' ,title: '性别' ,align: "center" ,templet: '#sex'}
+                    ,{field: 'status' ,title: '状态' ,align: "center" ,templet: '#buttonTpl'}
+                    ,{field: 'remarks' ,title: '描述'}
+                    ,{title: '操作' ,width: 150 ,align: 'center' ,fixed: 'right' ,toolbar: '#op_table'}
+                ]
+            ]
+        });
+        //头工具栏事件
+        table.on('toolbar(table_list)' ,function (obj) {
+            let event = obj.event;
+            var checkStatus = table.checkStatus(obj.config.id);
+            if (event == 'add') {
+                layer.open({
+                    type: 1 ,
+                    title: '用户编辑' ,
+                    area: ['auto'] ,
+                    content: $('#form_template_add').html() ,
+                    success: function (lay ,index) {
+                        form.render();
+                        form.on('submit(form_submit)' ,function (obj) {
+                            $.post('save' ,obj.field ,function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    table.reload('table_list');
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+            if (event == 'search_sh') {
+                $('.layui-card-header').toggle('slow');
+            }
+        });
+
+        table.on('tool(table_list)' ,function (obj) {
+            let event = obj.event;
+            console.log(event);
+            if (event == 'edit') {
+                layer.open({
+                    type: 1 ,
+                    title: '用户编辑' ,
+                    area: ['auto'] ,
+                    content: $('#form_template_edit').html() ,
+                    success: function (lay ,index) {
+                        form.render();
+                        form.val('form' ,obj.data);
+                        form.on('submit(form_submit)' ,function (res) {
+                            res.field['admin_id'] = obj.data['admin_id'];
+                            $.post('upd' ,res.field ,function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    table.reload('table_list');
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+
+            if (event == 'del') {
+
+                $.post('del' ,obj.data,function (res) {
+                    obj.del();
+                    layer.msg(res.msg);
+                });
+            }
+        });
+        /*搜索*/
+        form.on('submit(search)' ,function (obj) {
+            table.reload('table_list' ,{
+                method: 'get' ,
+                where: obj.field //设定异步数据接口的额外参数
+            });
+            return false;
+        });
+    });
+</script>
+</html>
+

@@ -1,0 +1,175 @@
+{include file='common/doc'}
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: none;">
+
+        </div>
+        <div class="layui-card-body">
+            <table id="table_list" lay-filter="table_list"></table>
+            <template id="table_toolbar">
+                <div class="layui-btn-group">
+                    <button type="button" lay-event="add" class="layui-btn layui-btn-primary layui-btn-sm">
+                        <i class="layui-icon layui-icon-add-1"></i>
+                    </button>
+                </div>
+            </template>
+                <script type="text/html" id="op_table">
+               <a class="layui-btn layui-btn-normal layui-btn-xs"
+                                                                                 lay-event="edit"><i
+                            class="layui-icon layui-icon-edit"></i>编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                            class="layui-icon layui-icon-delete"></i>删除</a>
+                </script>
+            <template id="form_template">
+                <form action="" class="layui-form" style="margin-top:30px" lay-filter="form" id="form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">等级名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="level_name" placeholder="请输入等级名称" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">升级规则</label>
+                        <div class="layui-input-inline">
+                            <select name="level_router" >
+                                <option value=""></option>
+                                <option value="1">充值</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <input type="text" name="router_parameter" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">享受佣金</label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="brokerage" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="form_submit">立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </template>
+        </div>
+    </div>
+</div>
+<script src="/layuiadmin/layui/layui.js"></script>
+</body>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index' ,'table','laydate'] ,function () {
+        var $ = layui.$
+            ,form = layui.form
+            ,table = layui.table;
+        table.render({
+            elem: '#table_list'
+            ,height: 'full-50'
+            ,toolbar: '#table_toolbar'
+            ,url: 'read' //数据接口
+            ,page: true //开启分页
+            ,limit:20
+            ,cols: [
+                [ //表头
+                    {type: 'checkbox' ,fixed: 'left'}
+                    ,{type: 'numbers' ,fixed: 'left'}
+                    ,{field: 'level_name' ,align: "center" ,title: '等级名称'}
+                    ,{field: 'level_router' ,align: "center" ,title: '会员规则',templet:function(d){
+                        let x =  ['' ,'<span>充值</span>'];
+                        return x[d.level_router]+d.router_parameter;
+                    }}
+                    ,{field: 'brokerage' ,align: "center" ,title: '享受佣金',templet:(d)=>d.brokerage+'%'}
+                    ,{title: '操作' ,width: 150 ,align: 'center' ,fixed: 'right' ,toolbar: '#op_table'}
+                ]
+            ]
+        });
+        //头工具栏事件
+        table.on('toolbar(table_list)' ,function (obj) {
+            let event = obj.event;
+            var checkStatus = table.checkStatus(obj.config.id);
+            if (event == 'add') {
+                layer.open({
+                    type: 1 ,
+                    title: '用户编辑' ,
+                    content: $('#form_template').html() ,
+                    success: function (lay ,index) {
+                        form.render();
+                        form.on('submit(form_submit)' ,function (obj) {
+                            $.post('save' ,obj.field ,function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    table.reload('table_list');
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+            if (event == 'search_sh') {
+                $('.layui-card-header').toggle('slow');
+            }
+        });
+
+        table.on('tool(table_list)' ,function (obj) {
+            let event = obj.event;
+            if (event == 'edit') {
+                layer.open({
+                    type: 1 ,
+                    title: '用户编辑' ,
+                    area: ['auto'] ,
+                    content: $('#form_template').html() ,
+                    success: function (lay ,index) {
+                        form.render();
+                        form.val('form' ,obj.data);
+                        form.on('submit(form_submit)' ,function (res) {
+                            res.field['level_id'] = obj.data['level_id'];
+                            $.post('upd' ,res.field ,function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    table.reload('table_list');
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+
+            if (event == 'del') {
+                console.log(obj);
+                $.post('del' ,obj.data ,function (res) {
+                    obj.del();
+                    layer.msg(res.msg);
+                });
+            }
+        });
+        /*搜索*/
+        form.on('submit(search)' ,function (obj) {
+            layui.laydate.render({
+                elem: '#date' //指定元素
+            });
+            table.reload('table_list' ,{
+                method: 'get' ,
+                where: obj.field //设定异步数据接口的额外参数
+            });
+            return false;
+        });
+    });
+</script>
+</html>
+

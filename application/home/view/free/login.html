@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html>
+{include file="common/doc" /}
+<body class="page-login">
+<link rel="stylesheet" href="/static/css/login.css">
+
+<div class="container">
+    <div class="main">
+        <div class="clearfix">
+            <div class="pull-left">
+                <div class="alink alink-regist">
+                    <h2>新人专享福利</h2>
+                    <p>注册后加导师送500流量币</p>
+                </div>
+            </div>
+            <div class="pull-right">
+                <div class="login-box">
+                    <div class="login-title">
+                        <a class="logo"></a>
+                        <h1>登陆</h1>
+                    </div>
+                    <div class="ll-form" id="appCtrl">
+                        <form class="w_FORM">
+                            <div class="ll-form-body">
+                                <div class="ll-form-group">
+                                    <div class="ll-form-content">
+                                        <input name="username" placeholder="手机号"  class="ll-form-input" >
+                                        <i class="icon icon-mobile"></i>
+                                    </div>
+                                </div>
+                                <div class="ll-form-group">
+                                    <div class="ll-form-content">
+                                        <input placeholder="登录密码"  name="password" type="password"  class="ll-form-input" >
+                                        <i class="icon icon-key"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ll-form-group">
+                                <button type="submit" class="ll-btn" >登录<span class="load-tips">注册中...</span></button>
+                            </div>
+                            <div class="ll-form-group ll-center">
+                                没有账号？<a class="text-orange" href="{:url('free/register')}">点此注册</a>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="d-text">
+    <h2>快速提升店铺流量</h2>
+    <small>电商时代，流量为王，掌握了流量你就可以在行业称王称霸。</small>
+</div>
+<script>
+
+    $('button[type=submit]').click(function(){
+        let data  = {
+            username:$('input[name="username"]').val(),
+            password:$('input[name="password"]').val(),
+        };
+
+        $.post('login',data,function(res){
+           if (res.code=0){
+               alert(res.msg);
+           }else{
+           location.href = '/task/app/index';
+           }
+        });
+        return false;
+    });
+</script>
+<!-- 底部开始 -->
+{include file="common/footer" /}
+<!-- 底部结束 -->
+
+<!-- 客服窗口开始 -->
+{include file="common/siderfixed" /}
+</body>
+</html>

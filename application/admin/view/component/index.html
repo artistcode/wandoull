@@ -1,0 +1,65 @@
+{include file='common/doc'}
+</head>
+<style>
+.layui-tree-setHide{
+        font-size: 16px;
+        margin-left: 20px;
+    }
+
+    .cate_col{
+        max-height: 800px;
+        height: 800px;
+    }
+</style>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space3">
+    <div class="layui-col-md2">
+        <div class="layui-card">
+            <div class="layui-card-header">卡片面板</div>
+            <div class="layui-card-body cate_col">
+                <div id="tree" style="margin-top:30px;"></div>
+            </div>
+        </div>
+
+    </div>
+    <div class="layui-col-md10">
+        <div class="layui-card" style="height: 850px;">
+            <div class="layui-card-header" > <p style="text-align: center;">内容</p></div>
+            <div class="layui-card-body">
+            </div>
+        </div>
+    </div>
+    </div>
+
+</div>
+
+<script src="/layuiadmin/layui/layui.js"></script>
+</body>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index' ,'table','tree'] ,function () {
+        var $ = layui.$
+            ,form = layui.form
+            ,table = layui.table
+            ,tree = layui.tree;
+        $.get('/admin/column/tree?sidebar=1',function(obj){
+            tree.render({
+                elem: '#tree'  //绑定元素
+               // ,showLine: false
+                ,accordion:true
+                ,data:obj
+                ,click: function(obj){
+
+                }
+            });
+        });
+
+
+    });
+</script>
+</html>
+

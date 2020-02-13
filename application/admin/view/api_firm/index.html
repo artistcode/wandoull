@@ -1,0 +1,228 @@
+{include file='common/doc'}
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+
+        <div class="layui-card-body">
+            <table id="table_list" lay-filter="table_list"></table>
+            <script type="text/html" id="op_table">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+            <template id="table_toolbar">
+                <div class="layui-btn-group">
+                    <button type="button" lay-event="add" class="layui-btn layui-btn-primary layui-btn-sm">
+                        <i class="layui-icon layui-icon-add-1"></i>
+                    </button>
+                </div>
+            </template>
+        </div>
+    </div>
+</div>
+<template id="form_template" style="display: none">
+    <form class="layui-form" action="" id="form" lay-filter="form" style="margin-top:10px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">api厂商</label>
+            <div class="layui-input-inline">
+                <input type="text" name="api_firm_name"
+                       placeholder="请输入昵称"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">地址</label>
+            <div class="layui-input-inline">
+                <input type="text" name="api_address"
+                       placeholder=""
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea name="api_remakes" placeholder="请输入描述内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+        <div>
+            <div class="layui-form-item ">
+                <label class="layui-form-label common_parameter"><i class="layui-icon layui-icon-add-circle" opt-type="add"></i><i class="layui-icon layui-icon-delete" opt-type="del"></i>公共参数</label>
+                <label class="layui-form-label" style="width:30px;">名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="common[0][name]" class="layui-input">
+                </div>
+                <label class="layui-form-label" style="width:30px;">值</label>
+                           <div class="layui-input-inline" style="width:100px;">
+                               <input type="text" name="common[0][value]" class="layui-input common_val" >
+                           </div>
+
+                <div class="layui-inline move_to_btn" >
+                    <button class="layui-btn layui-btn-normal" data-val="<[time]>">时间搓
+                    </button>
+                    <button class="layui-btn layui-btn-normal" data-val="<[random]>">随机数
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="form_submit">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</template>
+<script src="/layuiadmin/layui/layui.js"></script>
+</body>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index' ,'table'] ,function () {
+        var $ = layui.$
+            ,form = layui.form
+            ,table = layui.table;
+        table.render({
+            elem: '#table_list'
+            ,height: 'full-50'
+            ,toolbar: '#table_toolbar'
+            ,url: 'read' //数据接口
+            ,page: true //开启分页
+            ,limit:20
+            ,cols: [
+                [ //表头
+                    {type: 'checkbox' ,fixed: 'left'} ,
+                    {type: 'numbers' ,title:'#',fixed: 'left'}
+                    ,{field: 'api_firm_name' ,align: "center" ,title: 'api厂商'}
+                    ,{field: 'api_address' ,align: "center" ,title: '地址'}
+                    ,{field: 'api_remakes' ,align: "center" ,title: '备注'}
+                    ,{title: '操作' ,width: 150 ,align: 'center' ,fixed: 'right' ,toolbar: '#op_table'}
+                ]
+            ]
+        });
+        //头工具栏事件
+
+
+        function event_f(){
+
+            $('.common_parameter').on('click','i',function(res){
+                let op_type = $(this).attr('opt-type');
+               if (op_type == 'add'){
+                   let field = $(this).parents('.layui-form-item').clone();
+                   let common_container = $(this).parents('.layui-form-item').parent();
+                   let count = common_container.children().length;
+                   let el = field.find('[name*=common]');
+                   layui.each(el,function(index,item){
+                       $(item).attr('name',$(item).attr('name').replace(/\d/,count));
+                   });
+                   common_container.append(field);
+               }
+               if (op_type =='del'){
+                   let field = $(this).parents('.layui-form-item');
+                   field.remove();
+               }
+                form.render();
+            });
+
+            $('.move_to_btn').on('click', 'button', function () {
+                let val = $(this).attr('data-val');
+                $('.common_val').val(val);
+                return false;
+            });
+        }
+        table.on('toolbar(table_list)' ,function (obj) {
+            let event = obj.event;
+            var checkStatus = table.checkStatus(obj.config.id);
+            if (event == 'add') {
+                layer.open({
+                    type: 1 ,
+                    title: false,
+                    area: ['800px'] ,
+                    content: $('#form_template').html() ,
+                    success: function (lay ,index) {
+                        form.render();
+                        event_f();
+                        form.on('submit(form_submit)', function (obj) {
+
+                            $.post('save', obj.field, function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    table.reload('table_list');
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+
+        });
+
+        table.on('tool(table_list)' ,function (obj) {
+            let event = obj.event;
+            console.log(event);
+            if (event == 'edit') {
+                layer.open({
+                    type: 1 ,
+                    title: false ,
+                    area: ['auto'] ,
+                    content: $('#form_template').html() ,
+                    success: function (lay ,index) {
+                        event_f();
+                        form.render();
+                        let btn_add = $(lay).find('.common_parameter i[opt-type=add]')[0];
+
+                        let p = obj.data['api_public_parameter']     ? JSON.parse(obj.data['api_public_parameter']) : [];
+                            layui.each( p,function(index,item){
+                                if (index){
+                                    btn_add.click();
+                                }
+                               obj.data[`common[${index}][name]`]=  item['name'];
+                               obj.data[`common[${index}][value]`]=  item['value'];
+                            });
+                        form.val('form' ,obj.data);
+                        form.on('submit(form_submit)' ,function (res) {
+                            res.field['api_firm_id'] = obj.data['api_firm_id'];
+                            $.post('upd' ,res.field ,function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    table.reload('table_list');
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+
+            if (event == 'del') {
+
+                $.post('del' ,obj.data,function (res) {
+                    obj.del();
+                    layer.msg(res.msg);
+                });
+            }
+        });
+        /*搜索*/
+        form.on('submit(search)' ,function (obj) {
+            table.reload('table_list' ,{
+                method: 'get' ,
+                where: obj.field //设定异步数据接口的额外参数
+            });
+            return false;
+        });
+    });
+</script>
+</html>
+

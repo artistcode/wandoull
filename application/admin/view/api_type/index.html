@@ -1,0 +1,704 @@
+{include file='common/doc'}
+<style>
+    .tag_data {
+        margin-left: 200px;
+    }
+
+    .tag_data > span {
+        border: 1px solid #CCCCCC;
+        display: inline-block;
+
+        height: 25px;
+        text-align: center;
+        padding-left: 10px;
+        padding-right: 10px;
+        line-height: 25px;
+        margin-right: 3px;
+        width: 100px;
+        overflow: hidden;
+    }
+
+    .tag_data > span:not(:nth-child(1)).tag_data > span:not(:nth-child(2)) {
+        margin-top: 10px;
+    }
+
+    .tag_data > span i {
+        display: none;
+        color: red;
+    }
+
+    .tag_data > span:hover i {
+        clear: both;
+        float: right;
+        display: inline-block;
+    }
+
+    .tag h4 {
+        height: 38px;
+        width: 190px;
+        line-height: 38px;
+        border: 1px solid #cccbcb;
+        text-align: center;
+    }
+
+    .tag h4:after {
+        content: '🐫';
+        color: red;
+    }
+
+    .tag_chooser {
+        display: none;
+        text-align: center;
+        border: 1px solid #cccbcb;
+        border-collapse: collapse;
+        box-shadow: 10px 10px 10px 10px rgba(56, 56, 56, 0.9) /*阴影出现在元素下方*/
+    }
+
+    .tag {
+        position: absolute;
+    }
+
+    .tag:hover .tag_chooser {
+        display: inline-block;
+        width: 190px;
+        height: 200px;
+        overflow: auto;
+        z-index: 99999;
+        background-color: #FFFFFF;
+        position: relative;
+
+    }
+
+    .tag_chooser li:not(:nth-child(1)) {
+        border-top: 1px solid #cccbcb;
+        border-collapse: collapse;
+        margin-top: 3px;
+        height: 35px;
+        line-height: 35px;
+    }
+
+    .tag_chooser li:nth-child(1) {
+        height: 35px;
+        line-height: 35px;
+    }
+
+    .tag_chooser li:hover {
+        background-color: #009688;
+        color: #ffffff;
+        cursor: pointer;
+
+    }
+
+    select {
+        height: 38px;
+        width: 190px;
+        border: 1px solid #CCCCCC;
+    }
+
+    .data-container>div:nth-of-type(odd){ color: #ff5722; background-color:#F8F8F8;}
+
+
+</style>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="table_list" lay-filter="table_list"></table>
+            <script type="text/html" id="op_table">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+            <template id="table_toolbar">
+                <div class="layui-btn-group">
+                    <button type="button" lay-event="add" class="layui-btn layui-btn-primary layui-btn-sm">
+                        <i class="layui-icon layui-icon-add-1"></i>
+                    </button>
+                </div>
+            </template>
+        </div>
+    </div>
+</div>
+<div id="form_template" style="display: none">
+    <form class="layui-form" action="" id="form" lay-filter="form" style="margin-top:10px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">类型名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="api_type_name"
+                       placeholder="请输入昵称"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">上一级</label>
+            <div class="layui-input-inline">
+                <input type="text" id="tree" lay-filter="tree" class="layui-input">
+            </div>
+        </div>
+        {{#layui.each(d.member_level,function(index,item){}}
+        <div class="layui-form-item">
+            <label class="layui-form-label">{{item.level_name}}<i class="layui-icon layui-icon-username "
+                                                                  style="color:hotpink"></i></label>
+            <div class="layui-input-inline">
+                <input type="hidden" name="consume[{{item.level_id}}][level_id]" value="{{item.level_id}}">
+                <input type="hidden" name="consume[{{item.level_id}}][consume_id]">
+                <input type="number" name="consume[{{item.level_id}}][consume_num]"
+                       placeholder="消耗量"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        {{#});}}
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">api路径</label>
+            <div class="layui-input-inline">
+                <input type="text" name="api_path" class="layui-input"/>
+            </div>
+        </div>
+        <div class="tab_item">
+            <div class="layui-form-item ">
+                <label class="layui-form-label">字段</label>
+                <div class="layui-input-inline">
+                    <div class="tag">
+                        <h4>请选择</h4>
+                        <ul class="tag_chooser">
+                            {{# layui.each(d.parameter,function(index,item){}}
+                            <li data-id="{{item['parameter_id']}}"
+                                data-tips="{{item.parameter_name}}:{{item.parameter_remakes}}">{{item.parameter_alias}}
+                            </li>
+                            {{#});}}
+                        </ul>
+                        <input type="hidden" name="api_parameter_id">
+                    </div>
+                </div>
+            </div>
+            <div class="data-container">
+
+            </div>
+        </div>
+        <div class="layui-form-item ">
+            <label class="layui-form-label">所属厂商</label>
+            <div class="layui-input-inline">
+                <select lay-ignore name="firm_id">
+                    <option>请选择</option>
+                    {{#layui.each(d.firm,function(index,item){}}
+                    <option value="{{item.api_firm_id}}">{{item['api_firm_name']}}</option>
+                    {{#})}}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="api_type_parent"/>
+                <textarea name="api_type_remakes" placeholder="请输入描述内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="form_submit">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="tab_tpl" style="display: none">
+    <!--字段选择-->
+    <div>
+        <div class="layui-form-item ">
+            <label class="layui-form-label" lay-tips="{{d.tips}}">{{d.name}}<input type="hidden"
+                                                                                   name="field[{{d.count}}][parameter_id]"
+                                                                                   value="{{d.id}}"></label>
+            <div class="layui-input-inline" style="width: 100px">
+                <input type="hidden" class="field_id" name="field[{{d.count}}][field_id]">
+                <select name="field[{{d.count}}][field_source]" lay-filter="field_source">
+                    <option>请选择</option>
+                    <option value="1">提交字段</option>
+                    <option value="2">自定义值</option>
+                </select>
+            </div>
+            <div class="attach_field">
+
+            </div>
+            <div class="type_container">
+
+            </div>
+            <div class="layui-input-inline del" style="line-height: 38px;width: 30px;">
+                <i class="layui-icon layui-icon-delete"></i>
+            </div>
+        </div>
+
+        <div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">验证</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input validate" name="field[{{d.count}}][validate][0][router]">
+                </div>
+                <label class="layui-form-label" style="width: 30px">提示信息</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input " name="field[{{d.count}}][validate][0][tips]">
+                </div>
+                <div class="layui-input-inline to_validate" style="line-height: 38px;width: 60px;">
+                    <i class="layui-icon layui-icon-delete" event-type="del"></i>
+                    <i class="layui-icon layui-icon-add-1" event-type="add"></i>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block regexs" style="line-height: 38px;">
+                        <a class="layui-btn layui-btn-normal layui-btn-xs"
+                           router="">邮箱</a>
+                        <a class="layui-btn layui-btn-normal layui-btn-xs"
+                           router="url">url</a>
+                        <a class="layui-btn layui-btn-normal layui-btn-xs" router="phone">手机号</a>
+                        <a class="layui-btn layui-btn-normal layui-btn-xs" router="require">必填</a>
+                        <a class="layui-btn layui-btn-normal layui-btn-xs" router="number">数字</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--价格-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">扣费类型</label>
+            <div class="layui-input-inline">
+                <select name="field[{{d.count}}][charge_type]" data-id="{{d.count}}" lay-filter="charge_type">
+                    <option value=""></option>
+                    <option value="0">默认</option>
+                    <option value="1">字段</option>
+                    <option value="2">枚举</option>
+                </select>
+            </div>
+        </div>
+        <div class="charge">
+
+        </div>
+        <hr class="layui-bg-blue">
+    </div>
+</div>
+<div class="charge_template" style="display:none">
+    <div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">价格</label>
+            <div class="layui-input-inline">
+                <input type="number" placeholder="价格" name="field[{{d.count}}][price][0][price]" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">价格</label>
+            <div class="layui-input-inline">
+                <select name="field[{{d.count}}][price][0]['field']" id="">
+                    <option value=""></option>
+                    {{#layui.each(d.form_field,function(index,item){}}
+                    <option value="">{{item}}</option>
+                    {{#});}}
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <input type="number" placeholder="价格" name="field[{{d.count}}][price][0][price]" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">价格</label>
+            <div class="layui-input-inline">
+                <input type="text" name="field[{{d.count}}][price][0][field]" placeholder="值"  class="layui-input">
+            </div>
+
+            <div class="layui-input-inline">
+                <input type="number" name="field[{{d.count}}][price][0][price]" placeholder="价格" class="layui-input">
+            </div>
+            <div class="layui-input-inline  charge_event" style="line-height: 38px;width: 60px;"><i
+                    class="layui-icon layui-icon-delete" event-type="del"></i> <i
+                    class="layui-icon layui-icon-add-1" event-type="add"></i>
+            </div>
+        </div>
+    </div>
+</div>
+<template id="parameter_list">
+    <table id="table_parameter" lay-filter="table_parameter"></table>
+</template>
+<script src="/layuiadmin/layui/layui.js"></script>
+</body>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index' ,'table' ,'laytpl' ,'treetable' ,'treeSelect'] ,function () {
+        var $ = layui.$
+            ,form = layui.form
+            ,laytpl = layui.laytpl
+            ,treetable = layui.treetable
+            ,treeSelect = layui.treeSelect
+            ,table = layui.table;
+        function table_list(){
+            var insTb = treetable.render({
+                treeColIndex: 1 ,
+                treeSpid: 0 ,
+                treeIdName: 'api_type_id' ,
+                treePidName: 'api_type_parent' ,
+                toolbar: '#table_toolbar' ,
+                elem: '#table_list' ,
+                url: 'read' ,
+                cellMinWidth: 100 ,
+                cols: [
+                    [
+                        {type: 'numbers' ,title: '#'} ,
+                        {field: 'api_type_name' ,width: 200 ,align: "center" ,title: '类型名称'} ,
+                        {field: 'api' ,width: 150 ,align: "center" ,title: 'url' ,edit: true}
+                        ,{field: 'api_type_remakes' ,align: "center" ,title: '备注'}
+                        ,{title: '操作' ,width: 300 ,align: 'center' ,fixed: 'right' ,toolbar: '#op_table'}
+                    ]
+                ]
+                ,done: function () {
+                }
+            });
+        }
+        table_list();
+        table.on('edit(table_list)' ,function (obj) {
+            $.post('upd' ,obj.data ,function (res) {
+                if (res.code !== 0) {
+                    layer.msg(res.msg);
+                } else {
+                    layer.msg(res.msg);
+                }
+            });
+            return false;
+        });
+        function treeChooser(elem ,input) {
+            treeSelect.render({
+                // 选择器
+                elem: $(elem).find('#tree') ,
+                // 数据
+                data: 'read/tree' ,
+                // 异步加载方式：get/post，默认get
+                type: 'get' ,
+                // 占位符
+                placeholder: '占位符' ,
+                // 是否开启搜索功能：true/false，默认false
+                search: true ,
+                // 点击回调
+                click: function (d) {
+                    $("input[name=" + input + "]").val(d.current.value);
+                } ,
+                  /* // 加载完成后的回调函数
+                   success: function (d) {
+                     treeSelect.checkNode('tree', 0);
+                   }*/
+            });
+        }
+        function inArray(val ,arr) {
+            return arr.some(function (v) {
+                return val === v;
+            })
+        }
+        function define_event() {
+            form.on('select(field_type)' ,function (event) {
+                let elem = event.elem;
+                let value = event.value;
+                let name = $(this).text();
+                let field_item = $(elem).parents('.layui-form-item');
+            });
+            $('form').on('click' ,'.regexs a' ,function () {
+                let router = $(this).attr('router');
+                let input = $(this).parents('.layui-form-item').find('.validate');
+                if (input.val()) {
+                    if (!inArray(router ,input.val().split('|'))) {
+                        input.val(input.val() + '|' + router);
+                    }
+                } else {
+                    input.val(router);
+                }
+            });
+            $('form').on('click' ,'.charge_event i' ,function () {
+                let event = $(this).attr('event-type');
+                if (event=='add'){
+                    let clone = $(this).parents('.layui-form-item').clone();
+                    let charge_count = $(this).parents('.charge').children().length;
+                        layui.each(clone.find('input'),function(key,item){
+                            let name = $(item).attr('name');
+                            let new_name =  name.split('').reverse().join('').replace(/\d/ ,charge_count);
+                            new_name =new_name.split('').reverse().join('');
+                            $(item).attr('name',new_name);
+                        });
+                    $(this).parents('.charge').append(clone);
+                }
+                if(event == 'del'){
+                    let len = $(this).parents('.layui-form-item').parents('.charge').children().length;
+                    console.log(len);
+                    if (len ==1){
+                        layer.msg('最后一个不能被删除');
+                        return false;
+                    }
+                    $(this).parents('.layui-form-item').remove();
+                }
+            });
+            form.on('select(charge_type)' ,function (obj) {
+                    let field_id = obj.elem.getAttribute('data-id');
+                    let charge = $(this).parents('.layui-form-item').parent().find('.charge');
+                    let charge_template=$('.charge_template');
+                let x = $('input[name$="[field_name]"]');
+                     let form_field = [];
+                    layui.each(x,function(index,item){
+                        form_field.push($(item).val());
+                    });
+                    laytpl(charge_template[0].children[obj.value].innerHTML).render({'count':field_id,'form_field':form_field},function(tpl){
+                        charge.html(tpl);
+                        form.render();
+                    });
+            });
+            $('form').on('click' ,'.to_validate i' ,function () {
+                let event_type = $(this).attr('event-type');
+                if (event_type == 'add') {
+                    let item = $(this).parents('.layui-form-item');
+                    let clone = item.clone();
+                    let input = clone.find('input');
+                    let count = item.parent().children().length;
+                    layui.each(input ,function (i ,item) {
+                        let x = $(item).attr('name').split('').reverse().join('').replace(/\d/ ,count);
+                        x = x.split('').reverse().join('');
+                        $(item).attr('name' ,x);
+                    });
+                    /* input.attr('name',input.attr('name').replace(/\[\d\]\[val\]$/,`[${count}][val]`));*/
+                    item.parent().append(clone);
+                }
+                if (event_type == 'del') {
+                    let item = $(this).parents('.layui-form-item');
+                    item.remove();
+                }
+            });
+            $('.data-container').on('click' ,'.del' ,function () {
+                let field_id = $(this).parents('.layui-form-item').find('input[name$="field_id]"]').val();
+                if (field_id) {
+                    $.post('task_field_del' ,{'field_id': field_id} ,function (res) {
+                        layer.msg(res.msg);
+                    });
+                }
+                $(this).parents('.layui-form-item').parent().remove();
+            });
+            form.on('select(field_source)' ,function (event) {
+                let elem = event.elem;
+                let value = event.value;
+                let name = $(this).text();
+                let field_item = $(elem).parents('.layui-form-item').find('.attach_field');
+                let data_container = $(elem).parents('.data-container');
+                let count = /\d/.exec($(elem).attr('name'));
+                if (value == '1') {
+                    field_item.html(`
+                    <div class="layui-input-inline">
+                        <input type="text" placeholder="请输入${name}" name="field[${count[0]}][field_name]" class="layui-input">
+                    </div>`);
+                }
+                if (value == '2') {
+                    field_item.html(`
+                    <div class="layui-input-inline">
+                        <input type="text" placeholder="请输入${name}" name="field[${count[0]}][field_val]" class="layui-input">
+                    </div>`);
+                }
+
+            });
+            $('.tag_chooser').on('click' ,'li' ,function () {
+                let chooser_data = {
+                    'id': $(this).attr('data-id') ,
+                    'name': $(this).text() ,
+                    'tips': $(this).attr('data-tips') ,
+                };
+                let tab_container = $(this).parents('.tab_item');
+                let data_container = tab_container.find('.data-container');
+                Object.assign(chooser_data ,{'count': data_container.children().length + 1});
+                laytpl($('#tab_tpl').html()).render(chooser_data ,function (string) {
+                    data_container.append(string);
+                    form.render();
+                });
+                $(this).remove();
+
+            });
+        }
+        //头工具栏事件
+        table.on('toolbar(table_list)' ,function (obj) {
+            let event = obj.event;
+            var checkStatus = table.checkStatus(obj.config.id);
+            if (event == 'add') {
+                let tpl_data = {};
+                let url = [
+                    {
+                        'url': '/admin/member_level/read' ,
+                        'key': 'member_level' ,
+                    } ,
+                    {
+                        'url': '/admin/api_parameter/read' ,
+                        'key': 'parameter' ,
+                    }
+                    ,{
+                        'url': '/admin/api_firm/read' ,
+                        'key': 'firm' ,
+                    }
+                ];
+                url.forEach(function (item) {
+                    let p = {
+                        async: false ,
+                        success: function (d) {
+                            tpl_data[item['key']] = d.data;
+                        }
+                    };
+                    Object.assign(p ,item);
+                    $.ajax(p);
+                });
+                laytpl($('#form_template').get(0).innerHTML).render(tpl_data ,function (string) {
+                    layer.open({
+                        type: 1 ,
+                        title: 'api类型添加' ,
+                        area: ['800px'] ,
+                        content: string ,
+                        success: function (lay ,index) {
+                            define_event();
+                            form.render();
+                            treeChooser(lay ,'api_type_parent');
+                            form.on('submit(form_submit)' ,function (obj) {
+                                $.post('save' ,obj.field ,function (res) {
+                                    if (res.code !== 0) {
+                                        layer.msg(res.msg);
+                                    } else {
+                                        layer.msg(res.msg);
+                                        layer.close(index);
+                                        table_list();
+                                    }
+                                });
+                                return false;
+                            });
+                        }
+                    })
+                })
+
+            }
+        });
+        //行工具事件
+        table.on('tool(table_list)' ,function (obj) {
+            let event = obj.event;
+            if (event == 'edit') {
+                let tpl_data = {};
+                let url = [
+                    {
+                        'url': '/admin/member_level/read' ,
+                        'key': 'member_level' ,
+                    } ,
+                    {
+                        'url': '/admin/api_parameter/read' ,
+                        'key': 'parameter' ,
+                    }
+                    ,{
+                        'url': 'consume' ,
+                        'data': {'where': {'api_type_id': obj.data['api_type_id']}} ,
+                        'key': 'consume' ,
+
+                    }
+                    ,{
+                        'url': 'task_field' ,
+                        'data': {'where': {'api_type_id': obj.data['api_type_id']}} ,
+                        'key': 'task_field' ,
+                    } ,{
+                        'url': '/admin/api_firm/read' ,
+                        'key': 'firm' ,
+                    }
+                ];
+                 //请求所需数据
+                url.forEach(function (item) {
+                    let p = {
+                        async: false ,
+                        success: function (d) {
+                            tpl_data[item['key']] = d.data;
+                        }
+                    };
+                    Object.assign(p ,item);
+                    $.ajax(p);
+                });
+                laytpl($('#form_template').get(0).innerHTML).render(tpl_data ,function (string) {
+                    layer.open({
+                        type: 1 ,
+                        title: '编辑',
+                        area: ['1000px'] ,
+                        content: string ,
+                        success: function (lay ,index) {
+                            treeChooser(lay ,'api_type_parent');
+                            tpl_data['consume'].forEach(function (item ,index) {
+                                Object.keys(item).forEach(function (key) {
+                                    obj.data[`consume[${item['level_id']}][${key}]`] = item[key];
+                                });
+                            });
+                            define_event();
+                            tpl_data['task_field'].forEach(function (item ,i) {
+                                let chooser_parameter = lay.find(`.tag_chooser>li[data-id=${item['parameter_id']}]`)[0];
+                                chooser_parameter.click();
+                                let field_source = $($('.data-container').children()[i]).find('select[lay-filter="field_source"]').next();
+                                field_source.find(`dd[lay-value=${item['field_source']}]`).click();
+                                let charge_type = lay.find(`select[data-id=${i+1}]`).siblings('.layui-form-select').find(`dd[lay-value=${item['charge_type']}]`).click();
+                                if (item['price']) {
+                                    let price = JSON.parse(item['price']);
+
+                                    price.forEach(function(price,price_i){
+                                        if (item['charge_type'] == 2){
+                                                if (price_i){
+                                                    lay.find(`select[data-id=${i+1}]`).parents('.layui-form-item').siblings('.charge').find('i[event-type="add"]')[0].click();
+                                                }
+                                        }
+                                        Object.keys(price).forEach(function(key){
+                                            obj.data[`field[${i + 1}][price][${price_i}][${key}]`] = price[key];
+                                        })
+                                    });
+                                }
+
+                                if (item['validate']) {
+                                    let validate = JSON.parse(item['validate']);
+                                    let count = validate.length - 1;
+                                    for (let j = 0; j < count; j++) {
+                                        lay.find('.to_validate .layui-icon-add-1')[0].click();
+                                    }
+                                    layui.each(validate ,function (index ,item) {
+                                        Object.keys(item).forEach(function (key) {
+                                            obj.data[`field[${i + 1}][validate][${index}][${key}]`] = item[key];
+                                        })
+                                    });
+                                }
+                                Object.keys(item).forEach(function (key) {
+                                    obj.data[`field[${i + 1}][${key}]`] = item[key];
+                                });
+                            });
+                            form.val('form' ,obj.data);
+                            let api_type_id = obj.data['api_type_id'];
+                            form.on('submit(form_submit)' ,function (obj) {
+                                obj.field['api_type_id'] = api_type_id;
+                                $.post('upd' ,obj.field ,function (res) {
+                                    if (res.code !== 0) {
+                                        layer.msg(res.msg);
+                                    } else {
+                                        layer.msg(res.msg);
+                                        layer.close(index);
+                                        //table_list();
+                                    }
+                                });
+                                return false;
+                            });
+                        }
+                    })
+                })
+            }
+            if (event == 'del') {
+                $.post('del' ,{'api_type_id': obj.data['api_type_id']} ,function (res) {
+                    layer.msg(res.msg);
+                });
+            }
+        });
+        /*搜索*/
+        form.on('submit(search)' ,function (obj) {
+            table.reload('table_list' ,{
+                method: 'get' ,
+                where: obj.field //设定异步数据接口的额外参数
+            });
+            return false;
+        });
+    });
+</script>
+</html>
+

@@ -1,0 +1,557 @@
+
+/*!
+ * zeroModal.js
+ * http://git.oschina.net/cylansad/zeroModal
+ *
+ * Copyright 2016, Sad
+ */
+.zeromodal-overlay {
+    width: 100%;
+    height: 1000px;
+    position: fixed;
+    z-index: 1000;
+    opacity: .2;
+    background-color: rgba(0,0,0,0.4);
+    top: 0;
+    left: 0
+}
+
+.zeromodal-loading1 {
+    background: url(img/loading1.gif);
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: 50%;
+    top: 35%
+}
+
+.zeromodal-loading2 {
+    background: url(img/loading2.gif);
+    width: 37px;
+    height: 37px;
+    position: absolute;
+    left: 50%;
+    top: 35%
+}
+
+.zeromodal-container {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-align: center;
+    white-space: nowrap;
+    overflow: auto
+}
+
+.zeromodal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+    margin: 40px;
+    white-space: normal;
+    border-radius: 4px;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    box-shadow: 0 1px 20px 0 rgba(0,0,0,0.1);
+    max-width: 100%;
+    min-width: 240px;
+    box-sizing: border-box
+}
+
+.zeromodal-header {
+    position: relative;
+    overflow: hidden;
+    padding: 0 32px;
+    line-height: 72px
+}
+
+.zeromodal-title {
+    font-weight: 400;
+    font-size: 16px
+}
+
+.zeromodal-progress-content {
+    position: absolute;
+    left: 46%;
+    font-size: 13px;
+    color: #4fab1c
+}
+
+.zeromodal-body {
+    overflow-y: visible;
+    position: relative;
+    padding: 0 20px
+}
+
+.zeromodal-frame {
+    width: 100%;
+    height: 100%;
+    border: 0
+}
+
+.zeromodal-close {
+    position: absolute;
+    right: 32px;
+    top: 50%;
+    margin-top: -9px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    overflow: hidden;
+    cursor: pointer
+}
+
+.zeromodal-line {
+    border: none;
+    border-top: 1px solid #efefef;
+    margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 97%
+}
+
+.zeromodal-btn-container {
+    text-align: right;
+    padding: 10px 15px
+}
+
+.zeromodal-btn-container>.btn {
+    margin-left: 10px
+}
+
+.zeromodal-icon {
+    width: 80px;
+    height: 80px;
+    border: 4px solid #808080;
+    border-radius: 50%;
+    margin: 16px auto 16px;
+    margin-top: 16px;
+    padding: 0;
+    position: relative;
+    box-sizing: content-box;
+    cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+.zeromodal-icon.zeromodal-icon-info {
+    font-family: "Open Sans",sans-serif;
+    color: #3fc3ee;
+    border-color: #3fc3ee;
+    font-size: 60px;
+    line-height: 80px;
+    text-align: center
+}
+
+.zeromodal-icon.zeromodal-icon-question {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: #c9dae1;
+    border-color: #c9dae1;
+    font-size: 60px;
+    line-height: 80px;
+    text-align: center
+}
+
+.zeromodal-error {
+    border-color: #f27474
+}
+
+.zeromodal-icon.zeromodal-error .x-mark {
+    position: relative;
+    display: block
+}
+
+.zeromodal-icon.zeromodal-error .line.left {
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    left: 17px
+}
+
+.zeromodal-icon.zeromodal-error .line {
+    position: absolute;
+    height: 5px;
+    width: 47px;
+    background-color: #f27474;
+    display: block;
+    top: 37px;
+    border-radius: 2px
+}
+
+.zeromodal-icon.zeromodal-error .line.right {
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    right: 16px
+}
+
+.zeromodal-icon.zeromodal-success {
+    border-color: #a5dc86
+}
+
+.zeromodal-icon.zeromodal-success::before {
+    border-radius: 120px 0 0 120px;
+    top: -7px;
+    left: -33px;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    -webkit-transform-origin: 60px 60px;
+    transform-origin: 60px 60px
+}
+
+.zeromodal-icon.zeromodal-success::after {
+    border-radius: 0 120px 120px 0;
+    top: -11px;
+    left: 30px;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    -webkit-transform-origin: 0 60px;
+    transform-origin: 0 60px
+}
+
+.zeromodal-icon.zeromodal-success .placeholder {
+    width: 80px;
+    height: 80px;
+    border: 4px solid rgba(165,220,134,0.2);
+    border-radius: 50%;
+    box-sizing: content-box;
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    z-index: 2
+}
+
+.zeromodal-icon.zeromodal-success .fix {
+    width: 7px;
+    height: 90px;
+    background-color: #fff;
+    position: absolute;
+    left: 28px;
+    top: 8px;
+    z-index: 1;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg)
+}
+
+.zeromodal-icon.zeromodal-success .line {
+    height: 5px;
+    background-color: #a5dc86;
+    display: block;
+    border-radius: 2px;
+    position: absolute;
+    z-index: 2
+}
+
+.zeromodal-icon.zeromodal-success .line.tip {
+    width: 25px;
+    left: 14px;
+    top: 46px;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg)
+}
+
+.zeromodal-icon.zeromodal-success .line.long {
+    width: 47px;
+    right: 8px;
+    top: 38px;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg)
+}
+
+@-webkit-keyframes showZeroAlert {
+    0% {
+        -webkit-transform: scale(.7);
+        transform: scale(.7)
+    }
+
+    45% {
+        -webkit-transform: scale(1.05);
+        transform: scale(1.05)
+    }
+
+    80% {
+        -webkit-transform: scale(.95);
+        transform: scale(.95)
+    }
+
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1)
+    }
+}
+
+@keyframes showZeroAlert {
+    0% {
+        -webkit-transform: scale(.7);
+        transform: scale(.7)
+    }
+
+    45% {
+        -webkit-transform: scale(1.05);
+        transform: scale(1.05)
+    }
+
+    80% {
+        -webkit-transform: scale(.95);
+        transform: scale(.95)
+    }
+
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1)
+    }
+}
+
+@-webkit-keyframes hideZeroAlert {
+    0% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 1
+    }
+
+    100% {
+        -webkit-transform: scale(.5);
+        transform: scale(.5);
+        opacity: 0
+    }
+}
+
+@keyframes hideZeroAlert {
+    0% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 1
+    }
+
+    100% {
+        -webkit-transform: scale(.5);
+        transform: scale(.5);
+        opacity: 0
+    }
+}
+
+.show-zero2 {
+    -webkit-animation: showZeroAlert .3s;
+    animation: showZeroAlert .3s
+}
+
+.show-zero2.no-animation {
+    -webkit-animation: none;
+    animation: none
+}
+
+.hide-zero2 {
+    -webkit-animation: hideZeroAlert .15s;
+    animation: hideZeroAlert .15s
+}
+
+.hide-zero2.no-animation {
+    -webkit-animation: none;
+    animation: none
+}
+
+.zeromodal-title1 {
+    width: 100%;
+    text-align: center;
+    color: #575757;
+    font-size: 16px;
+    padding: 20px 40px;
+    font-weight: 100;
+    padding: 8px 0
+}
+
+.zeromodal-title2 {
+    width: 100%;
+    text-align: center;
+    color: #b7b7b7;
+    font-size: 13px;
+    padding: 8px 0
+}
+
+.zeromodal-overflow-y {
+    overflow-y: auto
+}
+
+.zeromodal-progress {
+    position: absolute;
+    opacity: .8;
+    width: 400px;
+    height: 5px;
+    overflow: visible;
+    background: #f0f0f0;
+    margin-bottom: 40px;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1)
+}
+
+.zeromodal-progress .zeromodal-progress-bar {
+    position: relative;
+    animation: animate-positive 2s
+}
+
+.zeromodal-progress-bar {
+    float: left;
+    width: 0;
+    height: 100%;
+    font-size: 12px;
+    line-height: 20px;
+    color: #fff;
+    text-align: center;
+    background-color: #337ab7;
+    -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,0.15);
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,0.15);
+    -webkit-transition: width .6s ease;
+    -o-transition: width .6s ease;
+    transition: width .6s ease
+}
+
+.zeromodal-progress .zeromodal-progress-icon {
+    width: 30px;
+    height: 30px;
+    line-height: 25px;
+    border-radius: 50%;
+    font-size: 13px;
+    position: absolute;
+    top: -14px;
+    right: 0;
+    background: #fff;
+    border-width: 3px;
+    border-style: solid;
+    text-align: center
+}
+
+.zeromodal-fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale
+}
+
+.zeromodal-progress-val {
+    position: absolute;
+    top: 10%;
+    left: 10%
+}
+
+.zeromodal-progress-val .line.tip {
+    width: 13px;
+    top: 13px;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg)
+}
+
+.zeromodal-progress-val .line {
+    height: 5px;
+    background-color: #92c26a;
+    display: block;
+    border-radius: 2px;
+    position: absolute;
+    z-index: 2
+}
+
+.zeromodal-progress-val .line.long {
+    width: 22px;
+    right: -26px;
+    top: 10px;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg)
+}
+
+@-webkit-keyframes rotate_pacman_half_up {
+    0% {
+        -webkit-transform: rotate(270deg);
+        transform: rotate(270deg)
+    }
+
+    50% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+
+    100% {
+        -webkit-transform: rotate(270deg);
+        transform: rotate(270deg)
+    }
+}
+
+@keyframes rotate_pacman_half_up {
+    0% {
+        -webkit-transform: rotate(270deg);
+        transform: rotate(270deg)
+    }
+
+    50% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+
+    100% {
+        -webkit-transform: rotate(270deg);
+        transform: rotate(270deg)
+    }
+}
+
+@-webkit-keyframes rotate_pacman_half_down {
+    0% {
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg)
+    }
+
+    50% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg)
+    }
+
+    100% {
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg)
+    }
+}
+
+@keyframes rotate_pacman_half_down {
+    0% {
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg)
+    }
+
+    50% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg)
+    }
+
+    100% {
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg)
+    }
+}
+
+@-webkit-keyframes pacman-balls {
+    75% {
+        opacity: .7
+    }
+
+    100% {
+        -webkit-transform: translate(-100px, -6.25px);
+        transform: translate(-100px, -6.25px)
+    }
+}
+
+@keyframes pacman-balls {
+    75% {
+        opacity: .7
+    }
+
+    100% {
+        -webkit-transform: translate(-100px, -6.25px);
+        transform: translate(-100px, -6.25px)
+    }
+}

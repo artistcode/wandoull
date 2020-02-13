@@ -1,0 +1,50 @@
+<style>
+    .nav-list{
+        display:none;
+        color:#ffffff;
+        background:#ff3d33;
+        border: 1px solid #ff3d3f;
+        border-radius: 10%;
+        box-shadow: 10px 10px 20px 10px rgba(255,255,0,0.5), -10px 10px 10px 10px rgba(255,255,255,0.5)
+    }
+    .nav-item:hover .nav-list{
+        display: block;
+    }
+
+    .nav-list li{
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+</style>
+<header class="header-orange" id="header">
+    <section class="main">
+        <div class="header-logo">
+            <a href="/" class="logo" title="豌豆-网店推广系统"></a>
+        </div>
+        <div class="header-btn">
+            {if condition='session("?member")'}
+            <a href="{:url('/task/app/index')}">{:session('member')['phone']}</a>
+            {/if}
+
+            {if condition='!session("?member")'}
+            <a class="" href="{:url('free/register')}">注册</a>
+            <span>|</span>
+            <a class="" href="{:url('free/login')}">登录</a>
+            {/if}
+        </div>
+        <ul class="header-nav">
+            <li class="home  "><a href="/">首页</a></li>
+            {foreach $column as  $key=>$vo}
+            <li class="nav-item"><a href="{:url($vo['control'].'\/'.$vo['method'],['column_id'=>$vo['id']])}">{$vo['title']}</a>
+                {if isset( $vo['children'])}
+                <ul class="nav-list">
+                    {foreach $vo['children'] as $key=>$vo}
+                    <li class="nav-item "><a href="{:url($vo['control'].'\/'.$vo['method'],['column_id'=>$vo['id']])}">{$vo['title']}</a></li>
+                    {/foreach}
+                </ul>
+                {/if}
+            </li>
+            {/foreach}
+        </ul>
+    </section>
+</header>

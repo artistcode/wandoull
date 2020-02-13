@@ -1,0 +1,31 @@
+<footer id="footer">
+    <div class="site-footer clearfix">
+        <div class="main clearfix">
+            <div class="about">
+                <h3><span>关于</span>豌豆网店优化</h3>
+                <p>
+                    豌豆是一款集店铺推广与电商查询为一体的流量软件！我们致力打造手机APP流量、PC流量，通过豌豆可快速提升淘宝、京东、拼多多等广大卖家的店铺流量，新开发的电商工具更可查验号，防止被骗避免损失，为网店卖家打造</p>
+            </div>
+            <div class="firend">
+                <div class="inner">
+                    <h3>友情链接</h3>
+                    <p>
+                        {if condition="isset($friend_link)"}
+                        {foreach $friend_link as $key=>$val}
+                        <a href="{$val['link_address']}" target="_blank" rel="noopener noreferrer">{$val['link_name']}</a>
+                        {/foreach}
+                        {/if}
+                    </p>
+                </div>
+            </div>
+            <div class="qrcode">
+              <!--  <img class="daoshi-qrcode" src="/static/img/1565759639882ZBP4quRUoSiMaHb.png" alt="客服微信">
+                <p><i class="icon icon-weixin"></i> 扫码加客服微信</p>-->
+            </div>
+        </div>
+        <div class="main copyright">
+            <span></span>
+            <a href="http://www.beian.miit.gov.cn/" target="_blank">粤ICP备18126514号</a>
+        </div>
+    </div>
+</footer>

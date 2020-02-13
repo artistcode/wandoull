@@ -1,0 +1,252 @@
+{include file='common/doc'}
+</head>
+<body>
+<style>
+    /* 这段样式只是用于演示 */
+    .layui-card {
+        height: 267px;
+        background-repeat: no-repeat;
+    }
+
+    .layui-card:hover {
+        box-shadow: 10px 10px 20px 10px rgba(94, 99, 98, 0.65), -10px 10px 10px 10px rgba(255, 255, 255, 0.5);
+    }
+    .layui-card .btn{
+        display: none;
+    }
+    .layui-card  .btn span{
+        border:1px solid black;
+        font-size: 14px;
+        border-radius: 20%;
+        background-color: #FFFFFF;
+    }
+    .layui-card:hover .btn {
+        display: block;
+        color:black;
+
+    }
+
+    #img_preview:hover {
+        box-shadow: 10px 10px 20px 10px rgba(94, 99, 98, 0.65), -10px 10px 10px 10px rgba(255, 255, 255, 0.5);
+        text-shadow: 5px 5px 5px #ee9900;
+    }
+
+    p {
+        text-align: center;
+        font-size: 16px;
+
+    }
+</style>
+<div class="layui-fluid" id="LAY-component-grid-list">
+    <div class="layui-row">
+        <div class="layui-col-sm12 layui-col-md12 layui-col-lg12">
+            <!-- 填充内容 -->
+            <div class="layui-btn-group toolbar">
+                <button type="button" lay-event='add' class="layui-btn layui-btn-primary layui-btn-sm">
+                    <i class="layui-icon">&#xe654;</i>
+                </button>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="layui-row layui-col-space10 content">
+        {{# layui.each(d, function(index, item){ }}
+        <div class="layui-col-sm4 layui-col-md3 layui-col-lg2">
+            <!-- 填充内容 -->
+            <div class="layui-card" style='background-image: url("/upload/{{item.video_img}}")'>
+                <p class="btn" style="text-align: right;">
+                    <span lay-event="edit" data-index="{{item.video_id}}">  <i class="layui-icon">&#xe642;</i></span>
+                    <span lay-event="del" data-index="{{item.video_id}}">  <i class="layui-icon">&#xe640;</i></span>
+                </p>
+                <p>{{item.video_title}}</p>
+                <p>{{item.video_intro}}</p>
+            </div>
+        </div>
+        {{# }); }}
+    </div>
+</div>
+<template class="form_template">
+    <form class="layui-form" style="margin-top:30px" id="form" lay-filter="form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题</label>
+            <div class="layui-input-inline">
+                <input type="text" name="video_title" required placeholder="请输入标题" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">视频简介</label>
+            <div class="layui-input-block">
+                <textarea name="video_intro" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-form-item">
+                <label class="layui-form-label">封面图片</label>
+                <div class="layui-upload-drag" id="img_up">
+                    <i class="layui-icon"></i>
+                    <p>点击上传，或将文件拖拽到此处</p>
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">显示</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="status" value="2" title="置项">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">视频</label>
+            <div class="layui-upload-drag" id="video_up">
+                <i class="layui-icon"></i>
+                <p>点击上传，或将文件拖拽到此处</p>
+            </div>
+            <input type="hidden" name="video_path"/>
+            <input type="hidden" name="video_img"/>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="form_submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</template>
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'jquery', 'form', 'upload', 'laytpl'], function () {
+        let $ = layui.jquery;
+        let form = layui.form;
+        let upload = layui.upload;
+        let parameter = location.search;
+        let laytpl = layui.laytpl;
+        parameter = parameter.replace('?', '').split('&');
+
+        let parent_parameter = {};
+        parameter.forEach(function (item) {
+            let x = item.split('=');
+            parent_parameter[x[0]] = x[1];
+        });
+
+        (function () {
+            $.get('/admin/video/read', {'column_id': parent_parameter.column_id}, function (res) {
+                laytpl($('.content').html()).render(res, function (string) {
+                    $('.content').html(string);
+                });
+            });
+        }());
+
+        function up() {
+            upload.render({
+                elem: '#img_up'
+                , url: '/admin/file/upload'
+                , before: function (obj) { //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                    obj.preview(function (index, file, result) {
+                        $('#img_up').html(`<img src="${result}" style="max-height: 300px" id="img_preview" alt="">`)
+                    });
+                    layer.load(); //上传loading
+                }
+                , done: function (res) {
+                    $('input[name="video_img"]').val(res.data['src']);
+                    layer.closeAll('loading'); //关闭loading
+                }
+            });
+            upload.render({
+                elem: '#video_up'
+                , url: '/admin/file/upload'
+                , accept: 'video'
+                , before: function (obj) { //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                    obj.preview(function (index, file, result) {
+                        $('#video_up').html(`<video style="height: 300px;width:300px" src="${result}" controls="controls">`)
+                    });
+                    layer.load(); //上传loading
+                }
+                , progress: function (n) {
+                    var percent = n + '%' //获取进度百分比
+
+                }
+                , done: function (res) {
+                    $('input[name="video_path"]').val(res.data['src']);
+                    layer.closeAll('loading'); //关闭loading
+                }
+            });
+        }
+
+        $('.toolbar').on("click", 'button', function () {
+            let event = $(this).attr('lay-event');
+            switch (event) {
+                case 'add':
+                    layer.open({
+                        type: 1,
+                        title: false,
+                        area: ['800px'],
+                        success: function () {
+                            up();
+                            form.on('submit(form_submit)', function (obj) {
+                                Object.assign(obj.field, parent_parameter);
+                                $.post('/admin/video/save', obj.field, function (res) {
+                                    layer.msg(res);
+                                    layer.closeAll();
+                                });
+                                return false;
+                            });
+                        },
+                        content: $('.form_template').html(),
+                    });
+                    break;
+                case 'del' :
+                    break;
+
+            }
+        });
+
+        $('.content').on('click','.btn span',function(){
+            let event = $(this).attr('lay-event');
+            let data_index =$(this).attr('data-index');
+
+            switch (event) {
+                case 'edit':
+                    layer.open({
+                        type: 1,
+                        title: false,
+                        area: ['800px'],
+                        success: function () {
+                            up();
+                            $.get('/admin/video/read', {'video_id': data_index}, function (res) {
+                                form.val('form',res);
+                                $('#img_up').html(`<img src="/upload/${res.video_img}" style="max-height: 300px" id="img_preview" alt="">`);
+                                $('#video_up').html(`<video style="height: 300px;width:300px" src="/upload/${res.video_path}" controls="controls">`)
+                                $('#form').append(`<input type="hidden" name="video_id" value="${res.video_id}" />`)
+                        });
+                            form.on('submit(form_submit)', function (obj) {
+                                Object.assign(obj.field, parent_parameter);
+                                $.post('/admin/video/upd', obj.field, function (res) {
+                                        layer.msg(res);
+                                    layer.closeAll();
+                                    location.reload();
+                                });
+                                return false;
+                            });
+                        },
+                        content: $('.form_template').html(),
+                    });
+                    break;
+                    case 'del':
+                        $.post('/admin/video/del',{'video_id':data_index},function(msg){
+                            layer.msg(msg)
+                        });
+                        break;
+
+            }
+
+        });
+    });
+</script>
+</body>
+</html>

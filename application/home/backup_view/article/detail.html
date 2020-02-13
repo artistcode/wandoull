@@ -1,0 +1,28 @@
+{include file="common/doc" /}
+<body>
+  <!-- nav部分 -->
+  {include file="common/nav" /}
+  <!-- main部分 -->
+  <div class="main-newsdate">
+    <div class="layui-container">
+      <p class="news"><a href="news.html">实时新闻</a> > 新闻详情</p>
+      <h1>{$article["article_title"]}</h1>
+      <p class="pushtime">发布时间：<span>{$article['addtime']}</span></p>
+        {:htmlspecialchars_decode($article['article_content'])}
+    </div>
+  </div>
+  <!-- footer部分 -->
+  {include file="common/footer" /}
+<script src="/home/res/layui/layui.js"></script>
+<!--[if lt IE 9]>
+  <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+  <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script>
+  layui.config({
+    base: '/home/res/static/js/'
+  }).use('firm');
+</script>
+
+</body>
+</html>

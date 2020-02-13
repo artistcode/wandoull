@@ -1,0 +1,194 @@
+{include file='common/doc'}
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: none;">
+        </div>
+        <div class="layui-card-body">
+            <table id="table_list" lay-filter="table_list"></table>
+            <script type="text/html" id="op_table">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+            <template id="table_toolbar">
+                <div class="layui-btn-group">
+                    <button type="button" lay-event="add" class="layui-btn layui-btn-primary layui-btn-sm">
+                        <i class="layui-icon layui-icon-add-1"></i>
+                    </button>
+
+                </div>
+            </template>
+        </div>
+    </div>
+</div>
+<template id="form_template" style="display: none">
+    <form class="layui-form" action=""  id="form" lay-filter="form" style="margin-top:10px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="link_name"
+                       lay-verType="tips"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">视频</label>
+            <div class="layui-upload-drag" id="logo_up">
+                <i class="layui-icon"></i>
+                <p>点击上传，或将文件拖拽到此处</p>
+            </div>
+            <input type="hidden" name="video_path"/>
+            <input type="hidden" name="video_img"/>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">链接地址</label>
+            <div class="layui-input-inline">
+                <input type="text" name="link_address"
+                       autocomplete="off" class="layui-input">
+
+            </div>
+        </div>
+        <input type="hidden" name="link_logo">
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea name="link_desc" id="" cols="30" rows="10"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="form_submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</template>
+<script src="/layuiadmin/layui/layui.js"></script>
+</body>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index' ,'table','upload'] ,function () {
+        var $ = layui.$
+            ,form = layui.form
+            ,upload = layui.upload
+            ,table = layui.table;
+        table.render({
+            elem: '#table_list'
+            ,height: 'full-50'
+            ,toolbar: '#table_toolbar'
+            ,url: 'read' //数据接口
+            ,page: true //开启分页
+            ,limit:20
+            ,cols: [
+                [ //表头
+                    {type: 'checkbox' ,fixed: 'left'} ,
+                    {type: 'numbers' ,fixed: 'left'},
+                    {field: 'link_name', title: '名称'},
+                    {field: 'link_desc', title: '描述'},
+                    {field: 'link_logo', title: 'logo',templet:(d)=>`<img src="/upload/${d.link_logo}">`},
+                    {field: 'link_address', title: '链接地址'},
+                  {title: '操作' ,width: 150 ,align: 'center' ,fixed: 'right' ,toolbar: '#op_table'}
+                ]
+            ]
+        });
+
+        function up(){
+            upload.render({
+                elem: '#logo_up'
+                , url: '/admin/file/upload'
+                , before: function (obj) { //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                    obj.preview(function (index, file, result) {
+                        $('#logo_up').html(`<img style="height: 300px;width:300px" src="${result}" >`)
+                    });
+                    layer.load(); //上传loading
+                }
+                , progress: function (n) {
+                    var percent = n + '%' //获取进度百分比
+
+                }
+                , done: function (res) {
+                      console.log(res);
+                    $('input[name="link_logo"]').val(res.data['src']);
+                    layer.closeAll('loading'); //关闭loading
+                }
+            });
+        }
+        //头工具栏事件
+        table.on('toolbar(table_list)' ,function (obj) {
+            let event = obj.event;
+            var checkStatus = table.checkStatus(obj.config.id);
+            if (event == 'add') {
+                layer.open({
+                    type: 1 ,
+                    title:false,
+                    area: ['800px'] ,
+                    content: $('#form_template').html() ,
+                    success: function (lay ,index) {
+                        up();
+                        form.render();
+                        form.on('submit(form_submit)' ,function (obj) {
+                            $.post('save' ,obj.field ,function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    table.reload('table_list');
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+
+        });
+        table.on('tool(table_list)' ,function (obj) {
+            let event = obj.event;
+            if (event == 'edit') {
+                layer.open({
+                    type: 1 ,
+                    title: false ,
+                    area: ['800px'] ,
+                    content: $('#form_template').html() ,
+                    success: function (lay ,index) {
+                        form.render();
+                        up();
+                        form.val('form' ,obj.data);
+                        $('#logo_up').html(`<img style="height: 300px;width:300px" src="/upload/${obj.data['link_logo']}" >`)
+                        form.on('submit(form_submit)' ,function (res) {
+                            res.field['link_id'] = obj.data['link_id'];
+                            $.post('upd' ,res.field ,function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    table.reload('table_list');
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+            if (event == 'del'){
+                $.post('del',{'link_id':obj.data['link_id']},function(res){
+                    layer.msg(res);
+                    obj.del();
+                })
+            }
+
+
+        });
+
+    });
+</script>
+</html>
+

@@ -1,0 +1,62 @@
+{include file='common/doc'}
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">支付宝支付</li>
+            <li>微信支付</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <form class="layui-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">APP_ID</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="api_id" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                            <label class="layui-form-label">加密方式</label>
+                        <div class="layui-input-inline">
+                            <select name="sign_type">
+                                <option value="">请选择</option>
+                                <option value="RSA2">RSA2</option>
+                                <option value="RSA2">RSA</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">商家私钥</label>
+                        <div class="layui-input-block layui-form-text">
+                            <textarea name="" cols="100" rows="10"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">支付宝私钥</label>
+                        <div class="layui-input-block layui-form-text">
+                            <textarea name="" cols="100" rows="10"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="layui-tab-item">内容2</div>
+        </div>
+    </div>
+</div>
+<script src="/layuiadmin/layui/layui.js"></script>
+</body>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index' ,'table'] ,function () {
+        var $ = layui.$
+            ,form = layui.form
+            ,table = layui.table;
+
+    });
+</script>
+</html>
+

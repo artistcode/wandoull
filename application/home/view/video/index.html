@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html>
+{include file="common/doc" /}
+<body class="page-article">
+{include file="common/nav" /}
+<link rel="stylesheet" href="/static/css/article.css">
+<div class="container">
+    <div class="main clearfix">
+        <div class="pull-left article-section">
+            <div class="article-box article-list">
+                <ul class='zx-list' style="margin-top:50px;">
+                    {foreach  name='video' item='vo'}
+                    <li>
+
+                        <a class="pic" href="/article/5de4aebba7069713c0130950.html" title="新手运营：淘宝流量的5大关键权重">
+                            <img src="/upload/{$vo.video_img}">
+                        </a>
+                        <div class="info right">
+
+                            <h3 class="title">
+                                <a href="/article/5de4aebba7069713c0130950.html" class="fl" title="新手运营：淘宝流量的5大关键权重">{$vo.video_title}</a>
+                                <span class="fr"></span>
+                            </h3>
+                            <p class="content">{$vo.video_intro}
+                                <a href="/article/5de4aebba7069713c0130950.html" title="新手运营：淘宝流量的5大关键权重">详情</a>
+                            </p>
+                            <div class="footer clearfix">
+
+                                <div class="pull-right">
+                                    2019-12-02
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {/foreach}
+                </ul>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="article-footer main">
+        <h2>专业的网店流量优化提升工具</h2>
+        <small>我们致力于打造优质的店铺流量，增加店铺宝贝收藏加购，快速提升商品排名</small>
+        <ul class="clearfix">
+            <li>
+                <div class="ico ico-head"></div>
+                <h3>专业开发团队</h3>
+                <p>专业领先的技术团队，倾力为你打造国内最安全稳定的流量提升平台</p>
+            </li>
+            <li>
+                <div class="ico ico-site"></div>
+                <h3>支持全流量平台</h3>
+                <p>支持淘宝/天猫/京东/拼多多/等营销型电商平台，让网店营销更加高效</p>
+            </li>
+            <li>
+                <div class="ico ico-client"></div>
+                <h3>完美兼容多设备</h3>
+                <p>可通过无线端、PC端搜索进店浏览，快速提升电脑、手机店铺流量</p>
+            </li>
+            <li>
+                <div class="ico ico-safe"></div>
+                <h3>一对一售后服务</h3>
+                <p>专业手把手教学式售后服务解决一切电商难题</p>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- 底部开始 -->
+{include file='common/footer' /}
+<!-- 底部结束 -->
+<!-- 客服窗口开始 -->
+{include file='common/siderfixed' /}
+<!-- 客服窗口结束 -->
+<!-- 脚本开始 -->
+
+
+</body>
+</html>

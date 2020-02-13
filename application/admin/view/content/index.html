@@ -1,0 +1,81 @@
+{include file='common/doc'}
+</head>
+<style>
+    html{
+        background-color: #FFFFFF;
+    }
+.layui-tree-setHide{
+        font-size: 16px;
+        margin-left: 20px;
+    }
+    #container_content{
+        width:100%;
+        min-height: 800px;
+    }
+
+</style>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row"  style="height:800px">
+    <div class="layui-col-md2">
+        <div class="layui-card">
+            <div class="layui-card-header" style="margin-top:30px;border: 1px solid  #2cb6a1 ">前台栏目</div>
+            <div class="layui-card-body">
+                <div id="column" ></div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md10" >
+        <div class="layui-card">
+            <div class="layui-card-body">
+        <iframe  id="container_content"   marginWidth=0 marginHeight=0  scrolling="none" src="/" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</div>
+
+<script src="/layuiadmin/layui/layui.js"></script>
+</body>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index' ,'table','tree'] ,function () {
+        var $ = layui.$
+            ,form = layui.form
+            ,table = layui.table
+            ,tree = layui.tree;
+        let  column = ['column','task_column'];
+        column.forEach(function(it){
+            $.get(`/admin/${it}/tree?sidebar=1`,function(obj){
+                tree.render({
+                    elem: '#'+it  //绑定元素
+                    // ,showLine: false
+                    ,accordion:true
+                    ,data:obj
+                    ,click: function(obj){
+                        let data= obj.data;
+                        Object.assign(data,{'column_id':data['id']});
+                        let p = '';
+                        Object.keys(data).forEach(function (item,key) {
+                            console.log(item);
+                            if (key){
+                                p+='&'+item+'='+data[item];
+                            }else{
+                                p+='?'+item+'='+data[item];
+                            }
+                        });
+                        $('#container_content').attr('src','/admin/content_module/template'+p) ;
+                    }
+                });
+            });
+        });
+
+
+    });
+</script>
+</html>
+

@@ -1,0 +1,173 @@
+{include  file="common/doc" /}
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table class="layui-table" id="table_list" lay-filter="table_list"></table>
+        </div>
+    </div>
+</div>
+<!-- 表格操作列 -->
+<script type="text/html" id="op_table">
+  <a class="layui-btn layui-btn-normal layui-btn-xs"
+                                                                lay-event="edit"><i
+            class="layui-icon layui-icon-edit"></i>编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+            class="layui-icon layui-icon-delete"></i>删除</a>
+</script>
+<template id="form_template" style="display: none">
+    <form class="layui-form"  id='form' lay-filter="form" style="margin-top:10px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">模块名称</label>
+            <div class="layui-input-inline">
+                <input class="layui-input" type="text" name="module_name" placeholder="请输入"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">路由</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" name="control" placeholder="控制器" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">-</div>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" name="method" placeholder="方法" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">表单模板</label>
+            <div class="layui-input-inline">
+                <input class="layui-input" type="text" name="form_template" placeholder="请输入"/>
+            </div>
+        </div>
+         <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" lay-submit lay-filter="form_submit">提交</button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+            </div>
+        </div>
+    </form>
+</template>
+<template id="table_toolbar">
+    <div class="layui-btn-group">
+        <button type="button" lay-event="add" class="layui-btn layui-btn-primary layui-btn-sm">
+            <i class="layui-icon layui-icon-add-1"></i>
+        </button>
+        <button type="button" lay-event="search_sh" class="layui-btn layui-btn-primary layui-btn-sm">
+            <i class="layui-icon layui-icon-search "></i>
+        </button>
+    </div>
+</template>
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index' ,'table'] ,function () {
+        var $ = layui.$
+            ,form = layui.form
+            ,table = layui.table;
+        table.render({
+            elem: '#table_list'
+            ,height: 'full-50'
+            ,toolbar: '#table_toolbar'
+            ,url: 'read' //数据接口
+            ,page: true //开启分页
+            ,limit:20
+            ,cols: [
+                [ //表头
+                    {type: 'checkbox' ,fixed: 'left'}
+                    ,{type: 'numbers' ,fixed: 'left'}
+                    ,{field: 'module_name' ,align: "center" ,title: '模块名称'}
+                    ,{field: 'control' ,align: "center" ,title: '控制器'}
+                    ,{field: 'method' ,align: "center",title: '方法'}
+                    ,{field: 'form_template' ,align:"center",title: '表单模板'}
+                    ,{title: '操作' ,width: 150 ,align: 'center' ,fixed: 'right' ,toolbar: '#op_table'}
+                ]
+            ]
+        });
+        //头工具栏事件
+        table.on('toolbar(table_list)' ,function (obj) {
+            let event = obj.event;
+            var checkStatus = table.checkStatus(obj.config.id);
+            if (event == 'add') {
+                layer.open({
+                    type: 1 ,
+                    title: '模块添加' ,
+                    area: ['auto'] ,
+                    content: $('#form_template').html() ,
+                    success: function (lay ,index) {
+                        form.render();
+                        form.on('submit(form_submit)' ,function (obj) {
+                            $.post('save' ,obj.field ,function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    table.reload('table_list');
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+            if (event == 'search_sh') {
+                $('.layui-card-header').toggle('slow');
+            }
+        });
+
+        table.on('tool(table_list)' ,function (obj) {
+            let event = obj.event;
+            console.log(event);
+            if (event == 'edit') {
+                layer.open({
+                    type: 1 ,
+                    title: false ,
+                    area: ['auto'] ,
+                    content: $('#form_template').html() ,
+                    success: function (lay ,index) {
+                        form.render();
+                        form.val('form' ,obj.data);
+                        form.on('submit(form_submit)' ,function (res) {
+                            res.field['module_id'] = obj.data['module_id'];
+                            $.post('upd' ,res.field ,function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    table.reload('table_list');
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+
+            if (event == 'del') {
+
+                $.post('del' ,obj.data,function (res) {
+                    obj.del();
+                    layer.msg(res.msg);
+                });
+            }
+        });
+        /*搜索*/
+        form.on('submit(search)' ,function (obj) {
+            table.reload('table_list' ,{
+                method: 'get' ,
+                where: obj.field //设定异步数据接口的额外参数
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>
+

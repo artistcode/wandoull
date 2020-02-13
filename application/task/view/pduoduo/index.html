@@ -1,0 +1,1333 @@
+{include file="common/doc"}
+<style>
+    .wx_box {
+
+    }
+
+    .wx_label {
+        float: left;
+        width: 6%;
+        font-size: 50px;
+    }
+
+    .wx_label i {
+        font-size: 50px;
+    }
+    .wx_item {
+        float: left;
+        border: 1px solid #CCCCCC;
+        width: 93%;
+        padding-top: 20px;
+        margin-bottom: 30px;
+        padding-bottom: 10px;
+    }
+
+    .time_mince {
+
+    }
+
+    .time_mince .layui-input-inline {
+        max-width: 30px;
+    }
+    /* 谷歌 number取消加减号 */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+    }
+    /* 火狐 number取消加减 */
+    input{
+        -moz-appearance:textfield;
+    }
+
+    .input_time{
+        width:44px !important;
+        height:40px;
+        background: #1E9FFF;
+        border-radius:10px;
+    }
+
+    .input_time .input_time_top{
+        width:44px;
+        height:29px;
+        text-align: center;
+        color: white;
+        line-height: 29px;
+    }
+    .input_time .input_time_bottom{
+        width:44px;
+        height:30px;
+        margin-bottom:5px;
+    }
+
+    .input_time .input_time_bottom input{
+        height:30px;
+        border-radius:0px 0px 10px 10px;
+    }
+
+    .overview_box{
+        display: inline-block;
+        width:100%;
+    }
+
+    .overview_box .overview{
+        padding-left: 10px;
+        margin-bottom:0px;
+        border:1px solid #1e9fff;
+        width: 92%;
+    }
+
+    .overview_box .overview span{
+        color: #1e9fff;
+    }
+</style>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-tab layui-tab-card">
+            <ul class="layui-tab-title">
+                <li class="layui-this">流量任务</li>
+                <li>收藏任务</li>
+
+            </ul>
+            <div class="layui-tab-content">
+                <!--流量任务-->
+                <div class="layui-tab-item layui-show">
+                        <div class="layui-tab layui-tab-card" style="border:none;box-shadow:none;">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">任务类型</label>
+                                <div class="layui-input-block">
+                                    <ul class="layui-tab-title">
+                                        <li class="layui-this">APP流量</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="layui-tab-content">
+                                <!--app 流量-->
+                                <div class="layui-tab-item layui-show">
+                                    <form class="layui-form" lay-filter="pdd-1-1">
+                                        <input type="hidden" name="task_type" value="pdd-1-1">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">商品链接</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="product_url"
+                                                       placeholder="请手动输入正确的请正淘宝/天猫/拼多多商品链接，输入错误链接会导致发布失败"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">商品标题</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="product_title"
+                                                       placeholder="请手动填写宝贝链接的商品全标题，商品链接与标题不匹配将导致任务发布失败"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="wx_box">
+                                            <div class="wx_label">
+                                                <div style="text-align: center"><i class="layui-icon layui-icon-add-circle" opt-type="add"></i></div>
+                                                <div style="text-align: center"><i class="layui-icon layui-icon-delete" opt-type="del"></i>
+                                                </div>
+                                            </div>
+                                            <div class="wx_item">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">关键词1</label>
+                                                    <div class="layui-input-block">
+                                                        <input type="text" name="keywords[]"
+                                                               placeholder="关键词必须为标题内含有文字，且区分字母大小写" autocomplete="off" class="layui-input">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">每天发布量</label>
+                                                    <div class="layui-input-inline">
+                                                        <input type="text" name="perday_pub_number[]" autocomplete="off"
+                                                               class="layui-input">
+                                                    </div>
+                                                    <div class="layui-form-mid"></div>
+                                                    <div class="layui-form-mid">展现</div>
+                                                    <div class="layui-input-inline">
+                                                        <input type="text" name="impressions_number[]" autocomplete="off"
+                                                               class="layui-input" >
+                                                    </div>
+                                                    <div class="layui-input-inline">
+                                                        <button class="layui-btn layui-btn-normal" data-t ="1" data-val="3" data-to="impressions_number">3倍</button>
+                                                        <button class="layui-btn layui-btn-normal" data-t ="1" data-val="5" data-to="impressions_number">5倍</button>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item send_number">
+
+                                                    <label class="layui-form-label">24小时细分</label>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">0点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                  placeholder="0"
+                                                                                                                  class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">1点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">2点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">3点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">4点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">5点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">6点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">7点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">8点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">9点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">10点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">11点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">12点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">13点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">14点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">15点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">16点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">17点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">18点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">19点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">20点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">21点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">22点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">23点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--分配-->
+                                        <div class="wx_label">&nbsp;</div>
+                                        <div class="wx_item" style="border: none;padding:0;" id="release_day">
+                                            <button type="button" class="layui-btn layui-btn-radius layui-btn-primary" style="border-radius:10px;">0点-7点不分配</button>
+                                            <button type="button" class="layui-btn layui-btn-radius layui-btn-primary" style="border-radius:10px;">24小时分配</button>
+                                        </div>
+                                        <!--分配-->
+                                        <div class="wx_box">
+                                            <div class="wx_label">
+                                                &nbsp;
+                                            </div>
+                                            <div class="wx_item">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">停留时间</label>
+                                                    <div class="layui-input-inline">
+                                                        <select name="stay_time">
+                                                            <option value="100-180">100秒-180秒(免费赠送)</option>
+                                                            <option value="180-280">180秒-280秒(1流量币)</option>
+                                                            <option value="280-380">280秒-380秒(2流量币)</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="layui-form-mid">浏览宝贝</div>
+                                                    <div class="layui-input-inline">
+                                                        <select name="product_view">
+                                                            <option value="dont_view">不要浏览</option>
+                                                            <option value="random_view">随机浏览</option>
+                                                            <option value="deep_view">深度浏览</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">4G比例</label>
+                                                    <div class="layui-input-inline">
+                                                        <select name="ratio_4g">
+                                                            <option value="percent_30">30% (全体免费赠送)</option>
+                                                            <option value="percent_50">50% (全体免费赠送)</option>
+                                                            <option value="percent_80">80% (全体免费赠送)</option>
+                                                            <option value="percent_100">100% (全体免费赠送)</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="layui-form-mid">查看评价</div>
+                                                    <div class="layui-input-inline">
+                                                        <select name="check_comment">
+                                                            <option value="1">查看</option>
+                                                            <option value="0">不查看</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">发布天数</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="publish_days"
+                                                       placeholder="请输入天数"
+                                                       autocomplete="off" class="layui-input" lay-filter="form_publish_days">
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux">天</div>
+                                            <div class="layui-inline">
+                                                <button class="layui-btn layui-btn-normal" data-val="7" data-to="publish_days">7天</button>
+                                                <button class="layui-btn layui-btn-normal" data-val="15" data-to="publish_days">15天</button>
+                                                <button class="layui-btn layui-btn-normal" data-val="30" data-to="publish_days">30天</button>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">开始时间</label>
+                                            <div class="layui-input-inline">
+                                                <input type="date" name="start_time"
+                                                       placeholder="请选择日期"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">备注</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="remarks"
+                                                       placeholder="请输入备注"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn layui-btn-normal" lay-submit>发布任务</button>
+                                                <button type="reset" class="layui-btn layui-btn-primary">取消</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!--概况-->
+                                    <div class="overview_box" style="display: inline-block; width:100%">
+                                        <div class="wx_label">&nbsp;</div>
+                                        <div class="wx_item overview">
+                                            <p>
+                                                任务时长 <span name="overview_tasknum">1</span> 天, 共计发布 <span name="overview_totalnum">99</span> 个任务
+                                            </p>
+                                            <p>
+                                                APP流量单个任务消耗 <span name="overview_app_num">9</span> 流量币 展现单个任务消耗 <span name="overview_imprenum">2</span> 流量币 合计消耗：<span name="overview_totalexpend">471.00</span> 流量币
+                                            </p>
+                                            <p>
+                                                vip会员合计消费：<span name="overview_vip_total">432.00</span> 流量币，升级vip会员优惠更多!
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <!--概况-->
+                                </div>
+                                <!--app 流量-->
+                            </div>
+                        </div>
+                </div>
+                <!--流量任务-->
+                <!--收藏任务-->
+                <div class="layui-tab-item">
+                        <div class="layui-tab layui-tab-card" style="border:none;box-shadow:none;">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">任务类型</label>
+                                <div class="layui-input-block">
+                                    <ul class="layui-tab-title">
+                                        <li class="layui-this">搜索收藏</li>
+                                        <li >商品收藏</li>
+                                        <li >店铺收藏</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="layui-tab-content">
+                                <!--搜索收藏-->
+                                <div class="layui-tab-item layui-show">
+                                    <form action="" class="layui-form" lay-filter="pdd-2-1">
+                                        <input type="hidden" name="task_type" value="pdd-2-1">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">商品链接</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="product_url"
+                                                       placeholder="请手动输入正确的请正淘宝/天猫/拼多多商品链接，输入错误链接会导致发布失败"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">商品标题</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="product_title"
+                                                       placeholder="请手动填写宝贝链接的商品全标题，商品链接与标题不匹配将导致任务发布失败"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="wx_box">
+                                            <div class="wx_label">
+                                                <div style="text-align: center"><i
+                                                        class="layui-icon layui-icon-add-circle" opt-type="add"></i></div>
+                                                <div style="text-align: center"><i class="layui-icon layui-icon-delete" opt-type="del"></i>
+                                                </div>
+                                            </div>
+                                            <div class="wx_item">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">关键词1</label>
+                                                    <div class="layui-input-block">
+                                                        <input type="text" name="keywords[]"
+                                                               placeholder="关键词必须为标题内含有文字，且区分字母大小写" autocomplete="off" class="layui-input">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">每天发布量</label>
+                                                    <div class="layui-input-inline">
+                                                        <input type="text" name="perday_pub_number[]" autocomplete="off"
+                                                               class="layui-input">
+                                                    </div>
+                                                    <div class="layui-form-mid"></div>
+                                                    <div class="layui-form-mid">展现</div>
+                                                    <div class="layui-input-inline">
+                                                        <input type="text" name="impressions_number[]" autocomplete="off"
+                                                               class="layui-input" >
+                                                    </div>
+                                                    <div class="layui-input-inline">
+                                                        <button class="layui-btn layui-btn-normal" data-val="3" data-to="impressions_number">3倍</button>
+                                                        <button class="layui-btn layui-btn-normal" data-val="5" data-to="impressions_number">5倍</button>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item send_number">
+
+                                                    <label class="layui-form-label">24小时细分</label>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">0点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">1点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">2点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">3点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">4点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">5点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">6点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">7点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">8点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">9点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">10点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">11点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">12点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">13点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">14点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">15点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">16点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">17点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">18点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">19点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">20点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">21点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">22点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">23点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="wx_label">&nbsp;</div>
+                                        <div class="wx_item" style="border: none;padding:0;">
+                                            <button type="button" class="layui-btn layui-btn-radius layui-btn-primary" style="border-radius:10px;">0点-7点不分配</button>
+                                            <button type="button" class="layui-btn layui-btn-radius layui-btn-primary" style="border-radius:10px;">24小时分配</button>
+                                        </div>
+                                        <div class="wx_box">
+                                            <div class="wx_label">
+                                                &nbsp;
+                                            </div>
+                                            <div class="wx_item">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">停留时间</label>
+                                                    <div class="layui-input-inline">
+                                                        <select name="stay_time">
+                                                            <option value="100-180">100秒-180秒(免费赠送)</option>
+                                                            <option value="180-280">180秒-280秒(1流量币)</option>
+                                                            <option value="280-380">280秒-380秒(2流量币)</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="layui-form-mid">浏览宝贝</div>
+                                                    <div class="layui-input-inline">
+                                                        <select name="product_view">
+                                                            <option value="dont_view">不要浏览</option>
+                                                            <option value="random_view">随机浏览</option>
+                                                            <option value="deep_view">深度浏览</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">4G比例</label>
+                                                    <div class="layui-input-inline">
+                                                        <select name="ratio_4g">
+                                                            <option value="percent_30">30% (全体免费赠送)</option>
+                                                            <option value="percent_50">50% (全体免费赠送)</option>
+                                                            <option value="percent_80">80% (全体免费赠送)</option>
+                                                            <option value="percent_100">100% (全体免费赠送)</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="layui-form-mid">查看评价</div>
+                                                    <div class="layui-input-inline">
+                                                        <select name="check_comment">
+                                                            <option value="1">查看</option>
+                                                            <option value="0">不查看</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">发布天数</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="publish_days"
+                                                       placeholder="请输入天数"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux">天</div>
+                                            <div class="layui-inline">
+                                                <button class="layui-btn layui-btn-normal" data-val="7" data-to="publish_days">7天</button>
+                                                <button class="layui-btn layui-btn-normal" data-val="15" data-to="publish_days">15天</button>
+                                                <button class="layui-btn layui-btn-normal" data-val="30" data-to="publish_days">30天</button>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">开始时间</label>
+                                            <div class="layui-input-inline">
+                                                <input type="date" name="start_time"
+                                                       placeholder="请选择日期"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">备注</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="remarks"
+                                                       placeholder="请输入备注"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="form_submit">发布任务</button>
+                                                <button type="reset" class="layui-btn layui-btn-primary">取消</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="overview_box">
+                                        <div class="wx_label">&nbsp;</div>
+                                        <div class="wx_item overview">
+                                            <p>
+                                                任务时长 3天, 共计发布 99个 任务
+                                            </p>
+                                            <p>
+                                                APP流量单个任务消耗9流量币 展现单个任务消耗2流量币 合计消耗：471.00流量币
+                                            </p>
+                                            <p>
+                                                vip会员合计消费： 432.00 流量币，升级vip会员优惠更多!
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--搜索收藏-->
+                                <!--商品收藏-->
+                                <div class="layui-tab-item">
+                                    <form action="" class="layui-form" lay-filter="pdd-2-2">
+                                        <input type="hidden" name="task_type" value="pdd-2-2">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">商品链接</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="product_url"
+                                                       placeholder="请手动输入正确的请正淘宝/天猫/拼多多商品链接，输入错误链接会导致发布失败"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">商品标题</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="product_title"
+                                                       placeholder="请手动填写宝贝链接的商品全标题，商品链接与标题不匹配将导致任务发布失败"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="wx_box">
+                                            <div class="wx_label">&nbsp
+                                            </div>
+                                            <div class="wx_item">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">每天发布量</label>
+                                                    <div class="layui-input-inline">
+                                                        <input type="text" name="perday_pub_number[]" autocomplete="off"
+                                                               class="layui-input">
+                                                    </div>
+                                                    <div class="layui-form-mid"></div>
+                                                </div>
+                                                <div class="layui-form-item send_number">
+
+                                                    <label class="layui-form-label">24小时细分</label>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">0点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">1点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">2点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">3点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">4点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">5点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">6点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">7点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">8点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">9点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">10点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">11点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">12点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">13点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">14点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">15点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">16点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">17点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">18点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">19点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">20点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">21点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">22点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">23点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="wx_label">&nbsp;</div>
+                                        <div class="wx_item" style="border: none;padding:0;">
+                                            <button type="button" class="layui-btn layui-btn-radius layui-btn-primary" style="border-radius:10px;">0点-7点不分配</button>
+                                            <button type="button" class="layui-btn layui-btn-radius layui-btn-primary" style="border-radius:10px;">24小时分配</button>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">发布天数</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="publish_days"
+                                                       placeholder="请输入天数"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux">天</div>
+                                            <div class="layui-inline">
+                                                <button class="layui-btn layui-btn-normal" data-val="7" data-to="publish_days">7天</button>
+                                                <button class="layui-btn layui-btn-normal" data-val="15" data-to="publish_days">15天</button>
+                                                <button class="layui-btn layui-btn-normal" data-val="30" data-to="publish_days">30天</button>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">开始时间</label>
+                                            <div class="layui-input-inline">
+                                                <input type="date" name="start_time"
+                                                       placeholder="请选择日期"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">备注</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="remarks"
+                                                       placeholder="请输入备注"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="form_submit">发布任务</button>
+                                                <button type="reset" class="layui-btn layui-btn-primary">取消</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="overview_box">
+                                        <div class="wx_label">&nbsp;</div>
+                                        <div class="wx_item overview">
+                                            <p>
+                                                任务时长 3天, 共计发布 99个 任务
+                                            </p>
+                                            <p>
+                                                APP流量单个任务消耗9流量币 展现单个任务消耗2流量币 合计消耗：471.00流量币
+                                            </p>
+                                            <p>
+                                                vip会员合计消费： 432.00 流量币，升级vip会员优惠更多!
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--商品收藏-->
+                                <!--店铺收藏-->
+                                <div class="layui-tab-item">
+                                    <form action="" class="layui-form" lay-filter="pdd-2-3">
+                                        <input type="hidden" name="task_type" value="pdd-2-3">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">店铺链接</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="store_url"
+                                                       placeholder="请手动输入正确的请正淘宝/天猫/拼多多商品链接，输入错误链接会导致发布失败"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">店铺标题</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="store_title"
+                                                       placeholder="请手动填写宝贝链接的商品全标题，商品链接与标题不匹配将导致任务发布失败"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="wx_box">
+                                            <div class="wx_label">&nbsp
+                                            </div>
+                                            <div class="wx_item">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">每天发布量</label>
+                                                    <div class="layui-input-inline">
+                                                        <input type="text" name="perday_pub_number[]" autocomplete="off"
+                                                               class="layui-input">
+                                                    </div>
+                                                    <div class="layui-form-mid"></div>
+                                                </div>
+                                                <div class="layui-form-item send_number">
+
+                                                    <label class="layui-form-label">24小时细分</label>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">0点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">1点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">2点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">3点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">4点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">5点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">6点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">7点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">8点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">9点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">10点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">11点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">12点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">13点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">14点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">15点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">16点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">17点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">18点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">19点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">20点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">21点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">22点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-input-inline input_time">
+                                                        <div class="input_time_top">23点</div>
+                                                        <div class="layui-input-inline input_time_bottom"><input min="1" type="number"
+                                                                                                                 placeholder="0"
+                                                                                                                 class="layui-input" name="split_time[0][]">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="wx_label">&nbsp;</div>
+                                        <div class="wx_item" style="border: none;padding:0;">
+                                            <button type="button" class="layui-btn layui-btn-radius layui-btn-primary" style="border-radius:10px;">0点-7点不分配</button>
+                                            <button type="button" class="layui-btn layui-btn-radius layui-btn-primary" style="border-radius:10px;">24小时分配</button>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">发布天数</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="publish_days"
+                                                       placeholder="请输入天数"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux">天</div>
+                                            <div class="layui-inline">
+                                                <button class="layui-btn layui-btn-normal" data-val="7" data-to="publish_days">7天</button>
+                                                <button class="layui-btn layui-btn-normal" data-val="15" data-to="publish_days">15天</button>
+                                                <button class="layui-btn layui-btn-normal" data-val="30" data-to="publish_days">30天</button>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">开始时间</label>
+                                            <div class="layui-input-inline">
+                                                <input type="date" name="start_time"
+                                                       placeholder="请选择日期"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">备注</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="remarks"
+                                                       placeholder="请输入备注"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="form_submit">发布任务</button>
+                                                <button type="reset" class="layui-btn layui-btn-primary">取消</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="overview_box">
+                                        <div class="wx_label">&nbsp;</div>
+                                        <div class="wx_item overview">
+                                            <p>
+                                                任务时长 3天, 共计发布 99个 任务
+                                            </p>
+                                            <p>
+                                                APP流量单个任务消耗9流量币 展现单个任务消耗2流量币 合计消耗：471.00流量币
+                                            </p>
+                                            <p>
+                                                vip会员合计消费： 432.00 流量币，升级vip会员优惠更多!
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--店铺收藏-->
+                            </div>
+                        </div>
+                </div>
+                <!--收藏任务-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index','task']);
+</script>
+</body>
+</html>

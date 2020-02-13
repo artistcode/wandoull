@@ -1,0 +1,128 @@
+{include file="common/head" /}
+<style>
+    .item{
+        width: 100%;
+        padding-top:20px;
+        margin-left: 50px;
+    }
+    .right_item {
+        padding-top:10px;
+        padding-left:10px;
+        color:#666666;
+        display: inline-block;
+
+    }
+
+    .left_item{
+        width: 80px;
+        text-align:center;
+        vertical-align:middle;
+        font-weight: bold;
+        display: inline-block;
+
+    }
+
+    .right_item .layui-btn{
+       margin-right: 30px;
+    }
+   ul li{
+        margin-top: 50px;
+    }
+    .active {
+        border: 1px solid red;
+    }
+</style>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card layui-form">
+        <div class="item">
+            <div class="left_item">
+                充值方式
+            </div>
+            <div class="right_item play_type" >
+                <input type="hidden" name="play_type" value="alipay" />
+                <img src="/static/img/playb.png"  play_type="alipay" class="active" alt="">
+                <img src="/static/img/playw.png"  play_type="wechat" alt="">
+            </div>
+        </div>
+        <div class="item">
+            <div class="left_item">
+                套餐
+            </div>
+            <div class="right_item money_chooser">
+                    <button class="layui-btn layui-btn-normal" money="50">50</button>
+                    <button class="layui-btn layui-btn-normal" money="200">200元（送10元）</button>
+            </div>
+        </div>
+        <div class="item">
+            <div class="left_item">
+                充值金额
+            </div>
+            <div class="right_item">
+                <input type="number" name="money" class="layui-input">
+            </div>
+    </div>
+        <div class="item">
+            <div class="left_item">
+            </div>
+            <div class="right_item">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="form_submit">立即充值</button>
+            </div>
+        </div>
+        <div class="item">
+            <div class="left_item font-notice">
+            </div>
+            <div class="right_item">
+                <h2>注意事项</h2>
+                <ul>
+                    <li>1、流量币会在您支付成功后自动充值到您的账户中；</li>
+                    <li>2、付款过程中，请慢慢操作，不要随意刷新网页。如果支付失败，请重新下单支付；</li>
+                    <li> 3、目前支持支付宝和微信两种正规渠道支付！如需帮助，请联系客服；</li>
+                    <li> 4、平台暂不支持提供发票；充值的流量币不支持提现！如有疑问，请在充值前联系客服咨询！</li>
+                    <li> 5、如需代理流量业务或者有商家资源需合作的可向网站客服了解分站加盟和api合作！</li>
+                </ul>
+            </div>
+        </div>
+        </div>
+</div>
+
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table','form'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , table = layui.table;
+            // 支付类似切换
+            let playEventType = $('.play_type');
+                playEventType.on('click','img',function(){
+                    $('.play_type').find('.active').removeClass('active');
+                    $(this).addClass('active');
+                    $('[name="play_type"]').val($(this).attr('play_type'));
+                });
+            // 金额选择
+            let moneyEventChooser = $('.money_chooser');
+                moneyEventChooser.on('click','button',function(){
+                   let money = $(this).attr("money");
+                      $('[name="money"]').val(money);
+                });
+            form.on("submit(form_submit)",function(obj){
+                　　　// 必须在点击事件之后获取  这样或取得才是当前的 值
+                      layer.open({
+                        type:2,
+                        title:false,
+                        scrollbar: false,
+                        shadeClose:true,
+                        area:["100%",'100%'],
+                        //area:['1000px','500px'],
+                        content:obj.field['play_type']+'?money='+obj.field['money'],
+                    })
+            });
+
+    });
+</script>
+</body>
+</html>

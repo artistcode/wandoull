@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="/home/res/static/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/home/res/layui/css/layui.css">
+  <script type="text/javascript" src="/home/res/layui/layui.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+</head>
+<body>
+<div class="content content-nav-base  login-content">
+  <div class="login-bg">
+    <div class="login-cont w1200">
+      <div class="form-box">
+        <form class="layui-form" action="">
+          <legend>登录</legend>
+          <div class="layui-form-item">
+          <div class="layui-inline ">
+            <div class="layui-input-inline">
+              <input type="text" name="username" placeholder="手机号" class="layui-input">
+            </div>
+          </div>
+        </div>
+          <div class="layui-form-item">
+            <div class="layui-inline ">
+              <div class="layui-input-inline">
+                <input type="password" name="password" placeholder="密码" class="layui-input">
+              </div>
+            </div>
+          </div>
+          <div class="layui-form-item login-btn">
+            <div class="layui-input-block">
+              <button class="layui-btn" lay-submit="register" lay-filter='register' onclick="return false">注册
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  layui.config({
+    base: './res/static/js/util' //你存放新模块的目录，注意，不是layui的模块目录
+  }).use(['jquery' ,'form'] ,function () {
+    var $ = layui.$ ,form = layui.form;
+    $("#find").click(function () {
+      if (!/^1\d{10}$/.test($("#phone").val())) {
+        layer.msg("请输入正确的手机号");
+        return false;
+      }
+      var obj = this;
+      $.post('/home/free/',{'phone':$("#phone").val()},function(res){
+        $("#find").addClass(" layui-btn-disabled");
+        $('#find').attr('disabled' ,"true");
+        settime(obj);
+        $("#msg").text(data.msg);
+      })
+
+    });
+    form.on('submit(register)' ,function (obj) {
+      $.post('/home/free/login',obj.field,function(return_data){
+          if (return_data.code==0){
+            layer.msg('登入成功' ,{
+              offset: '15px'
+              ,icon: 1
+              ,time: 1000
+            } ,function () {
+              location.href = '../../widget'; //后台主页
+            });
+
+          }
+      });
+      return false;
+    });
+
+  })
+</script>
+
+</body>
+</html>

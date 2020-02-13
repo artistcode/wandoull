@@ -1,0 +1,304 @@
+{include  file="common/doc" /}
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table class="layui-table" id="table_list" lay-filter="table_list"></table>
+        </div>
+    </div>
+</div>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="op_table">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="add"><i
+            class="layui-icon layui-icon-add-1"></i>添加</a>    <a class="layui-btn layui-btn-normal layui-btn-xs"
+                                                                 lay-event="edit"><i
+            class="layui-icon layui-icon-edit"></i>编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+            class="layui-icon layui-icon-delete"></i>删除</a>
+</script>
+<template id="form_template" style="display: none">
+    <form class="layui-form" id='form' lay-filter="form" style="margin-top:10px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单名称</label>
+            <div class="layui-input-inline">
+                <input class="layui-input" type="text" name="column_name" placeholder="请输入"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">上一级</label>
+            <div class="layui-input-inline">
+                <input type="text" id="tree" lay-filter="tree" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">内容模块</label>
+
+            <div class="layui-input-inline">
+                <select name="module_id" id=""></select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">序号</label>
+            <div class="layui-input-inline">
+                <input type="hidden" name="column_parent">
+                <input type="number" value="255" name="sort" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否置项</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="item" value="1" title="是">
+                <input type="radio" name="item" value="0" title="否">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">列表页排序方式</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="sort_field" value="1" title="更新时间">
+                <input type="radio" name="sort_field" value="2" title="发布时间" >
+                <input type="radio" name="sort_field" value="3" title="点击次数" >
+                <input type="radio" name="sort_field" value="4" title="ID 倒序" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">关键字</label>
+            <div class="layui-input-inline">
+                <input type="hidden" name="column_parent">
+                <input type="text"  name="keywords" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea name="description" placeholder="请输入描述内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" lay-submit lay-filter="form_submit">提交</button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+            </div>
+        </div>
+    </form>
+</template>
+<template id="table_toolbar">
+    <div class="layui-btn-group">
+        <button type="button" lay-event="add" class="layui-btn layui-btn-primary layui-btn-sm">
+            <i class="layui-icon layui-icon-add-1"></i>
+        </button>
+    </div>
+</template>
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'util', 'treetable', 'treeSelect', 'laytpl'], function (){
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var admin = layui.admin;
+        var treetable = layui.treetable;
+        var treeSelect = layui.treeSelect;
+        var laytpl = layui.laytpl;
+        function renderTable() {
+            treetable.render({
+                treeColIndex: 1,
+                treeSpid: 0,
+                treeIdName: 'column_id',
+                treePidName: 'column_parent',
+                toolbar: '#table_toolbar',
+                elem: '#table_list',
+                url: 'read',
+                cellMinWidth: 100,
+                cols: [[
+                    {type: 'numbers', title: '#'},
+                    {field: 'column_name', title: '栏目名称'},
+                    {field: 'addtime', title: '添加时间'},
+                    {field: 'icon', title: '图标'},
+                    {field: 'is_show_nav', title: '显示',templet:function(d){
+                            let sorts  = [
+                                ''
+                                ,'<span class="layui-badge layui-bg-blue">不显示</span>'
+                                ,'<span class="layui-badge layui-bg-black">头部主导航栏</span>'
+                                ,'<span class="layui-badge layui-bg-gray">尾部导航</span>'
+                                ,'<span class="layui-badge layui-bg-cyan">尾部导航</span>'
+                            ];
+                            return sorts[d['is_show_nav']]
+                        }},
+                    {field: 'sort_field', title: '排序方式',templet:function(d){
+                            let sorts  = [
+                                ''
+                                ,'<span class="layui-badge layui-bg-blue">更新时间</span>'
+                                ,'<span class="layui-badge layui-bg-black">发布时间</span>'
+                                ,'<span class="layui-badge layui-bg-gray">点击次数</span>'
+                                ,'<span class="layui-badge layui-bg-cyan">ID 倒序</span>'
+                            ];
+                            return sorts[d['sort_field']]}},
+                    {field: 'description', align:"center", title: '描述'},
+                    {field: 'module_name', align:"center", title: '模块',templet:(d)=>`<span class="layui-badge layui-bg-gray">${d.module_name}</span>`},
+                    {field: 'keywords', title: '关键字'},
+                    {
+                        field: 'sort',
+                        title: '排序号',
+                        align: 'center',
+                        templet: (d) => `<span class="layui-badge layui-bg-blue">${d.sort}</span>`
+                    },
+
+                    {templet: '#op_table', title: '操作',width:300, align: 'center', minWidth: 120}
+                ]]
+            });
+        }
+        renderTable();
+        function treeChooser(input, chooser_node = 0,unset='') {
+            treeSelect.render({
+                // 选择器
+                elem: '#tree',
+                // 数据
+                data: 'tree?select=1&type='+unset,
+                // 异步加载方式：get/post，默认get
+                type: 'get',
+                // 占位符
+                placeholder: '占位符',
+                // 是否开启搜索功能：true/false，默认false
+                search: true,
+                // 点击回调
+                click: function (d) {
+
+                    $("input[name=" + input + "]").val(d.current.id);
+                },
+                // 加载完成后的回调函数
+                success: function (d) {
+                    treeSelect.checkNode('tree', chooser_node);
+                }
+            });
+        }
+
+        table.on('tool(table_list)', function (obj) {
+            let event = obj.event;
+            if (event == 'edit') {
+                layer.open({
+                    type: 1,
+                    title: '菜单编辑',
+                    area: ['500px', '500px'],
+                    content: $('#form_template').html(),
+                    success: function (lay, index) {
+                        $.get('/admin/content_module/read', function (res) {
+                            var   html = '';
+                            res.data.forEach(function(item,index){
+                                if (obj.data['module_id']== item.module_id){
+                                    html+=`<option value="${item.module_id}" selected>${item.module_name}</option>`
+                                }else{
+                                    html+=`<option value="${item.module_id}">${item.module_name}</option>`
+                                }
+                            });
+                            $('select[name="module_id"]').html(html);
+                            form.render('select');
+                        });
+                        form.render();
+                        treeChooser('column_parent', obj.data['column_parent'],obj.data['column_id']);
+                        form.val('form', obj.data);
+                        form.on('submit(form_submit)', function (ewa) {
+                            ewa.field['column_id'] = obj.data['column_id'];
+                            $.post('upd', ewa.field, function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    renderTable();
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+            if (event == 'add') {
+
+                layer.open({
+                    type: 1,
+                    title: '菜单添加',
+                    area: ['500px','500px'],
+                    content: $('#form_template').html(),
+                    success: function (lay, index) {
+                        $.get('/admin/content_module/read', function (res) {
+                            var   html = '';
+                            res.data.forEach(function(item,index){
+                                html+=`<option value="${item.module_id}">${item.module_name}</option>`
+                            });
+                            $('select[name="module_id"]').html(html);
+                            form.render('select');
+                        });
+                        form.render();
+                        treeChooser('column_parent', obj.data['column_id']);
+                        $("input[name='column_parent']").val(obj.data['column_id']);
+                        form.on('submit(form_submit)', function (obj) {
+                            $.post('save', obj.field, function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    renderTable();
+                                    layer.closeAll();
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+
+            if (event == 'del') {
+
+                $.post('del', {'column_id': obj.data['column_id']}, function (res) {
+                    obj.del();
+                    layer.msg(res.msg);
+                });
+            }
+        });
+        table.on('toolbar(table_list)', function (obj) {
+            let event = obj.event;
+            if (event == 'add') {
+                layer.open({
+                    type: 1,
+                    title: '菜单添加',
+                    area: ['800px','500px'],
+                content: $('#form_template').html(),
+                    success: function (lay, index) {
+                        $.get('/admin/content_module/read', function (res) {
+                            var   html = '';
+                            res.data.forEach(function(item,index){
+                                html+=`<option value="${item.module_id}">${item.module_name}</option>`
+                            });
+                            $('select[name="module_id"]').html(html);
+                            form.render('select');
+                        });
+                        form.render();
+                        treeChooser('column_parent');
+                        form.on('submit(form_submit)', function (obj) {
+                            $.post('save', obj.field, function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    renderTable();
+                                    layer.closeAll();
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+        });
+    });
+</script>
+</body>
+</html>
+

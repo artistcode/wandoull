@@ -1,0 +1,286 @@
+{include  file="common/doc" /}
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table class="layui-table" id="table_list" lay-filter="table_list"></table>
+        </div>
+    </div>
+</div>
+<!-- 表格操作列 -->
+<script type="text/html" id="op_table">
+    <input type="checkbox" name="lock_status" lay-skin="switch" lay-text="ON|OFF" {{ d.status ? '' : 'checked' }} >
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="add"><i
+            class="layui-icon layui-icon-add-1"></i>添加</a>
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"
+       class="layui-icon layui-icon-edit"></i>编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+            class="layui-icon layui-icon-delete"></i>删除</a>
+</script>
+<template id="form_template" style="display: none">
+    <form class="layui-form" id='form' lay-filter="form" style="margin-top:10px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单名称</label>
+            <div class="layui-input-inline">
+                <input class="layui-input" type="text" name="menu_name" placeholder="请输入"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">上一级</label>
+            <div class="layui-input-inline">
+                <input type="text" id="tree" lay-filter="tree" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">类型</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="type" value="1" title="菜单" lay-filter="type" checked>
+                <input type="radio" name="type" value="2" title="目录" lay-filter="type">
+                <input type="radio" name="type" value="3" title="按钮" lay-filter="type">
+                <input type="radio" name="type" value="4" title="选项卡" lay-filter="type">
+            </div>
+        </div>
+        <div class="layui-form-item router_control">
+            <div class="layui-inline">
+                <label class="layui-form-label">路由</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" name="control" placeholder="控制器" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">-</div>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" name="method" placeholder="方法" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">序号</label>
+
+            <div class="layui-input-inline">
+                <input type="hidden" name="menu_parent_id">
+                <input type="number" value="255" name="sort" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" lay-submit lay-filter="form_submit">提交</button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+            </div>
+        </div>
+    </form>
+</template>
+<template id="table_toolbar">
+    <div class="layui-btn-group">
+        <button type="button" lay-event="add" class="layui-btn layui-btn-primary layui-btn-sm">
+            <i class="layui-icon layui-icon-add-1"></i>
+        </button>
+        <button type="button" lay-event="search_sh" class="layui-btn layui-btn-primary layui-btn-sm">
+            <i class="layui-icon layui-icon-search "></i>
+        </button>
+    </div>
+</template>
+
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index' ,'util' ,'treetable' ,'treeSelect'] ,function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var admin = layui.admin;
+        var treetable = layui.treetable;
+        var treeSelect = layui.treeSelect;
+
+        // 渲染表格
+        function renderTable() {
+            treetable.render({
+                treeColIndex: 1 ,
+                treeSpid: 0 ,
+                treeIdName: 'menu_id' ,
+                treePidName: 'menu_parent_id' ,
+                toolbar: '#table_toolbar' ,
+                elem: '#table_list' ,
+                url: 'read' ,
+                cellMinWidth: 100 ,
+                cols: [
+                    [
+                        {type: 'numbers' ,title: '#'} ,
+                        {field: 'menu_name' ,title: '权限名称' ,minWidth: 200} ,
+                        {
+                            field: 'icon' ,align: 'center' ,title: '图标' ,templet: function (d) {
+                                return d.icon == '' ? '无' : `<i class="layui-icon ${d.icon}"></i>`;
+                            }
+                        } ,
+                        {
+                            field: 'type' ,align: 'center' ,title: '类型' ,templet: function (d) {
+                                let x = [
+                                    '',
+                                    '<span class="layui-badge layui-bg-green">菜单</span>' ,
+                                    '<span class="layui-badge layui-bg-blue">目录</span>' ,
+                                    '<span class="layui-badge layui-bg-blue">按钮</span>' ,
+                                    '<span class="layui-badge layui-bg-blue">选项卡</span>' ,
+                                ];
+                                return x[d.type];
+                            }
+                        } ,
+                        {
+                            title: '菜单url' ,width: 200 ,align: 'center' ,templet: function (d) {
+                                return d.control == '' ? '<font color="pink">目录</font>' : `<a href="/admin/${d.control + '/' + d.method}" target="_blank"><span class="layui-badge layui-bg-green">${d.control}</span><font color="red">/</font><span class="layui-badge layui-bg-blue">${d.method}</span></a>`
+                            }
+                        } ,
+                        {
+                            field: 'sort' ,
+                            title: '排序号' ,
+                            align: 'center' ,
+                            templet: (d) => `<span class="layui-badge layui-bg-blue">${d.sort}</span>`
+                        } ,
+                        {templet: '#op_table' ,width: 300 ,title: '操作' ,align: 'center' ,minWidth: 120}
+                    ]
+                ]
+            });
+        }
+
+        renderTable();
+
+        function treeChooser(input ,chooser_node = 0) {
+            treeSelect.render({
+                // 选择器
+                elem: '#tree' ,
+                // 数据
+                data: 'tree?type' ,
+                // 异步加载方式：get/post，默认get
+                type: 'get' ,
+                // 占位符
+                placeholder: '占位符' ,
+                // 是否开启搜索功能：true/false，默认false
+                search: true ,
+                // 点击回调
+                click: function (d) {
+                    $("input[name=" + input + "]").val(d.current.id);
+                } ,
+                // 加载完成后的回调函数
+                success: function (d) {
+                    if (chooser_node) {
+                        treeSelect.checkNode('tree' ,chooser_node);
+                    }
+                }
+            });
+        }
+
+        form.on('radio(type)' ,function (data) {
+            let control = `  <div class="layui-inline">
+                <label class="layui-form-label">路由</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" name="control" placeholder="控制器" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">-</div>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" name="method" placeholder="方法" autocomplete="off" class="layui-input">
+                </div>
+            </div>`;
+            if (data.value == 2) {
+                $(this).parents('.layui-form-item').siblings('.router_control').html('');
+            } else {
+                $(this).parents('.layui-form-item').siblings('.router_control').html(control);
+            }
+        });
+        table.on('tool(table_list)' ,function (obj) {
+            let event = obj.event;
+            if (event == 'edit') {
+
+                layer.open({
+                    type: 1 ,
+                    title: '菜单编辑' ,
+                    area: ['500px' ,'500px'] ,
+                    content: $('#form_template').html() ,
+                    success: function (lay ,index) {
+                        form.render();
+                        form.val('form' ,obj.data);
+                        treeChooser('menu_parent_id' ,obj.data['menu_parent_id']);
+                        form.on('submit(form_submit)' ,function (ewa) {
+                            ewa.field['menu_id'] = obj.data['menu_id'];
+                            $.post('upd' ,ewa.field ,function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    renderTable();
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+            if (event == 'add') {
+                layer.open({
+                    type: 1 ,
+                    title: '菜单添加' ,
+                    area: ['auto'] ,
+                    content: $('#form_template').html() ,
+                    success: function (lay ,index) {
+                        form.render();
+                        treeChooser('menu_parent_id' ,obj.data['menu_id']);
+                        $("input[name='menu_parent_id']").val(obj.data['menu_id']);
+                        form.on('submit(form_submit)' ,function (obj) {
+                            $.post('save' ,obj.field ,function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+
+                                } else {
+                                    layer.msg(res.msg);
+                                    renderTable();
+                                    layer.closeAll();
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+
+            if (event == 'del') {
+                $.post('del' ,{'menu_id': obj.data['menu_id']} ,function (res) {
+                    obj.del();
+                    layer.msg(res.msg);
+                });
+            }
+        });
+        table.on('toolbar(table_list)' ,function (obj) {
+            let event = obj.event;
+            if (event == 'add') {
+                layer.open({
+                    type: 1 ,
+                    title: '菜单添加' ,
+                    area: ['auto'] ,
+                    content: $('#form_template').html() ,
+                    success: function (lay ,index) {
+                        form.render();
+                        treeChooser('menu_parent_id');
+                        form.on('submit(form_submit)' ,function (obj) {
+                            $.post('save' ,obj.field ,function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    renderTable();
+                                    layer.closeAll();
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+        });
+    });
+</script>
+</body>
+</html>
+

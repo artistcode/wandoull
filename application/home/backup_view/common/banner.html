@@ -1,0 +1,32 @@
+
+{if condition="!isset($_GET['column_id'])"}
+<div>
+    <div class="layui-carousel" id="banner">
+        <div carousel-item>
+            {volist name="banner" id="vo"}
+            <div>
+                <img src="{$vo.advertising_img}">
+                <div class="panel">
+                    <p class="title">{$vo.advertising_name}</p>
+                </div>
+            </div>
+            {/volist}
+        </div>
+    </div>
+</div>
+{else /}
+
+<div class="banner ">
+    <div class="layui-carousel" id="banners">
+        <div carousel-item>
+            {volist name="banner" id="vo"}
+            <div>
+                <img src="{$vo.advertising_img}">
+                <p>{$vo.advertising_name}</p>
+            </div>
+            {/volist}
+        </div>
+    </div>
+</div>
+
+{/if}

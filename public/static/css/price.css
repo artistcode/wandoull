@@ -1,0 +1,168 @@
+.page-price {
+    padding-top: 160px;
+}
+.page-price .site-title {
+    background: url(/assets/images/price-title-bg.png) no-repeat center center;
+}
+.page-price .site-title h2 {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+.page-price .site-title small {
+    font-size: 16px;
+}
+.page-price .price-container {
+    overflow: hidden;
+    min-height: 600px;
+    position: relative;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), color-stop(#ffffff), to(#c1e7ff));
+    background: linear-gradient(#ffffff, #ffffff, #c1e7ff);
+}
+.page-price .price-container:after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(/assets/images/price-cloud.png) repeat-x 0 bottom;
+    height: 500px;
+}
+.page-price .price-container > .main {
+    position: relative;
+}
+.page-price .price-grid-wrap {
+    margin: 0 -100px;
+}
+.page-price .price-nav {
+    text-align: center;
+    margin-bottom: 36px;
+    padding-top: 30px;
+}
+.page-price .price-nav > a {
+    display: inline-block;
+    margin: 0 2px;
+    padding: 10px 30px;
+    line-height: 1;
+    font-size: 18px;
+    color: #fff;
+    border-radius: 30px;
+    background: #9c9c9c;
+}
+.page-price .price-nav > a.active {
+    background: #ff601b;
+}
+.page-price .grid {
+    border: 2px #ff601b solid;
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+    margin-bottom: 60px;
+    position: relative;
+    z-index: 10;
+}
+.page-price .grid > table {
+    width: 100%;
+    table-layout: fixed;
+    table-space: 0;
+}
+.page-price .grid th {
+    height: 72px;
+    background: #f7f7f7;
+    color: #fff;
+}
+.page-price .grid th h3 {
+    font-size: 15px;
+}
+.page-price .grid th small {
+    font-weight: normal;
+    font-size: 14px;
+}
+.page-price .grid th.title {
+    color: #5e5e5e;
+}
+.page-price .grid th.normal {
+    background: #e7e7e7;
+    color: #5e5e5e;
+}
+.page-price .grid th.normal small {
+    color: #838383;
+}
+.page-price .grid th.vip1 {
+    background: #ffac1b;
+}
+.page-price .grid th.vip2 {
+    background: #ff8b1b;
+}
+.page-price .grid th.vip3 {
+    background: #ff601b;
+}
+.page-price .grid th.vip4 {
+    background: #ff2255;
+}
+.page-price .grid th.vip5 {
+    background: #ac29ff;
+}
+.page-price .grid tr > td:first-child {
+    border-left: 0 !important;
+}
+.page-price .grid tr:first-child > td {
+    padding-top: 30px;
+}
+.page-price .grid tr:last-child > td {
+    padding-bottom: 30px;
+}
+.page-price .grid td {
+    text-align: center;
+    height: 20px;
+    line-height: 20px;
+    padding: 12px;
+    border-left: 1px solid #c0c0c0;
+    font-size: 15px;
+}
+.page-price .grid td b,
+.page-price .grid td span,
+.page-price .grid td small {
+    color: #838383;
+}
+.page-price .grid td b {
+    font-size: 18px;
+}
+.page-price .grid td span {
+    font-size: 15px;
+}
+.page-price .grid td small {
+    font-size: 12px;
+}
+.page-price .grid td.normal span,
+.page-price .grid td.normal b {
+    font-weight: normal;
+    font-size: 15px;
+}
+.page-price .grid td.vip1 span,
+.page-price .grid td.vip1 b {
+    color: #ffac1b;
+}
+.page-price .grid td.vip2 span,
+.page-price .grid td.vip2 b {
+    color: #ff8b1b;
+}
+.page-price .grid td.vip3 span,
+.page-price .grid td.vip3 b {
+    color: #ff7543;
+}
+.page-price .grid td.vip4 span,
+.page-price .grid td.vip4 b {
+    color: #ff2255;
+}
+.page-price .grid td.vip5 span,
+.page-price .grid td.vip5 b {
+    color: #ac29ff;
+}
+@media screen and (max-width: 1600px) {
+    .page-price .price-grid-wrap {
+        max-width: 1400px;
+        margin: auto;
+    }
+}

@@ -1,0 +1,297 @@
+{include file='common/doc'}
+<style>
+    .layui-colla-title {
+        background-color: #FFFFFF;
+    }
+
+    .laytable-cell-1-0-2{
+        text-align:center;
+        height: auto;
+        white-space: normal;
+    }
+</style>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" style="display: none;">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">登录名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="loginname" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">手机</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="telphone" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="email" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">角色</label>
+                    <div class="layui-input-block">
+                        <select name="role">
+                            <option value="0">管理员</option>
+                            <option value="1">超级管理员</option>
+                            <option value="2">纠错员</option>
+                            <option value="3">采购员</option>
+                            <option value="4">推销员</option>
+                            <option value="5">运营人员</option>
+                            <option value="6">编辑</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <table id="table_list" lay-filter="table_list"></table>
+            <script type="text/html" id="op_table">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+            <template id="table_toolbar">
+                <div class="layui-btn-group">
+                    <button type="button" lay-event="add" class="layui-btn layui-btn-primary layui-btn-sm">
+                        <i class="layui-icon layui-icon-add-1"></i>
+                    </button>
+                    <button type="button" lay-event="search_sh" class="layui-btn layui-btn-primary layui-btn-sm">
+                        <i class="layui-icon layui-icon-search "></i>
+                    </button>
+                </div>
+            </template>
+        </div>
+    </div>
+</div>
+<template id="form_template" style="display: none">
+    <form class="layui-form"  id="form" lay-filter="form" action="" style="margin-top:10px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">广告名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="advertising_name" required lay-verify="required" lay-reqText="昵称不能为空"
+                       lay-verType="tips"
+                       placeholder="请输入昵称"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <!--     <div class="layui-form-mid layui-word-aux">辅助字段</div>-->
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">栏目</label>
+            <div class="layui-input-inline">
+                <input type="text" id="tree" lay-filter="tree" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">链接</label>
+            <div class="layui-input-inline">
+                <input type="text" name="advertising_link" required lay-verify="required" lay-reqText="昵称不能为空"
+                       lay-verType="tips"
+                       placeholder="链接地址"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <!--     <div class="layui-form-mid layui-word-aux">辅助字段</div>-->
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片</label>
+            <div class="layui-input-block">
+                <div class="layui-upload-drag" id="img" >
+                    <i class="layui-icon"></i>
+                    <p>选择文件</p>
+
+                </div>
+            </div>
+            <!--     <div class="layui-form-mid layui-word-aux">辅助字段</div>-->
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="column_id">
+                <input type="hidden" name="advertising_img" class="layui-input">
+                <input type="checkbox" name="status" value="1" lay-skin="switch" lay-text="开启|关闭">
+            </div>
+            <!--     <div class="layui-form-mid layui-word-aux">辅助字段</div>-->
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="form_submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</template>
+<script type="text/html" id="status">
+    {{#  if(d.status == 1){ }}
+    <button class="layui-btn layui-btn-xs">启用</button>
+    {{#  } else { }}
+    <button class="layui-btn layui-btn-primary layui-btn-xs">禁用</button>
+    {{#  } }}
+</script>
+<script src="/layuiadmin/layui/layui.js"></script>
+</body>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index' ,'table','treeSelect','upload','fileChoose'] ,function () {
+        var $ = layui.$
+            ,form = layui.form
+            ,table = layui.table
+            ,fileChoose = layui.fileChoose
+            ,treeSelect = layui.treeSelect
+            ,upload = layui.upload;
+        table.render({
+            elem: '#table_list'
+            ,height: 'full-50'
+            ,toolbar: '#table_toolbar'
+            ,url: 'read' //数据接口
+            ,page: true //开启分页
+            ,limit:20
+            ,cols: [
+                [ //表头
+                    {type: 'checkbox'} ,
+                    {type: 'numbers' }
+                    ,{field: 'advertising_img' ,align: "center" ,title: '广告图片',templet:(d)=> `<img style="height:100px;width:200px" src="${d.advertising_img}" />`}
+                    ,{field: 'advertising_name' ,align: "center" ,title: '广告名称'}
+                    ,{field: 'advertising_link' ,align: "center" ,title: '链接'}
+                    ,{field: 'status' ,align: "center" ,title:'状态',templet:'#status'}
+                    ,{field: 'column_name' ,align: "center" ,title: '所属栏目',templet:(d)=>d.column_name ? d.column_name : '首页 '}
+                    ,{title: '操作' ,width: 150 ,align: 'center' ,fixed: 'right' ,toolbar: '#op_table'}
+                ]
+            ]
+        });
+        function treeChooser(input,chooser_node=0){
+
+            $('#img').click(function () {
+                fileChoose.open({
+                    fileUrl: '',
+                    listUrl: '/admin/file/read',
+                    num: 1,
+                    dialog: {
+                        offset: '60px'
+                    },
+                    upload: {
+                        elem: '#file-btn-upload'
+                        , url: 'upload' //上传接口
+                        ,done: function(res, index, upload){
+                            layer.msg(res.msg,{'icon':1});
+                            renderList();
+                        }
+                    },
+                    onChoose: function (urls) {
+                        console.log(urls)
+                       $('#img').html(`<img src="${urls[0]['url']}">`);
+                        $('input[name="advertising_img"]').val(urls[0]['url']);
+                    }
+                });
+            });
+            treeSelect.render({
+                // 选择器
+                elem: '#tree',
+                // 数据
+                data: '/admin/column/tree?select=12',
+                // 异步加载方式：get/post，默认get
+                type: 'get',
+                // 占位符
+                placeholder: '占位符',
+                // 是否开启搜索功能：true/false，默认false
+                search: true,
+                // 点击回调
+                click: function(d){
+                    $("input[name="+input+"]").val(d.current.id);
+                },
+                // 加载完成后的回调函数
+                success: function (d) {
+                    if (chooser_node){
+                        treeSelect.checkNode('tree', chooser_node);
+                    }
+                }
+            });
+        }
+        //头工具栏事件
+        table.on('toolbar(table_list)' ,function (obj) {
+            let event = obj.event;
+            var checkStatus = table.checkStatus(obj.config.id);
+            if (event == 'add') {
+                layer.open({
+                    type: 1 ,
+                    title: '广告添加' ,
+                    area: ['800px','500px'] ,
+                    content: $('#form_template').html() ,
+                    success: function (lay ,index) {
+                        form.render();
+                        treeChooser('column_id');
+                        form.on('submit(form_submit)' ,function (obj) {
+                            $.post('save' ,obj.field ,function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    table.reload('table_list');
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+
+        });
+        table.on('tool(table_list)' ,function (obj) {
+            let event = obj.event;
+            console.log(event);
+            if (event == 'edit') {
+                layer.open({
+                    type: 1 ,
+                    title: '用户编辑' ,
+                    area: ['800px','500px'],
+                    content: $('#form_template').html() ,
+                    success: function (lay ,index) {
+                        form.render();
+                        $('#img').html(`<img src="${obj.data['advertising_img']}">`);
+                        treeChooser('column_id',obj.data['column_id']);
+                        form.val('form' ,obj.data);
+                        form.on('submit(form_submit)' ,function (res) {
+                            res.field['advertising_id'] = obj.data['advertising_id'];
+                            $.post('upd' ,res.field ,function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    table.reload('table_list');
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+
+            if (event == 'del') {
+                $.post('del' ,obj.field ,function (res) {
+                    obj.del();
+                    layer.msg(res.msg);
+                });
+            }
+        });
+
+    });
+</script>
+</html>
+

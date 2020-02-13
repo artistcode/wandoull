@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+{include file="common/doc" /}
+<link rel="stylesheet" href="/static/css/price.css">
+<body class="page-price">
+{include file="common/nav" /}
+<div class="main">
+    <h4 style="text-align: center">{$article['article_title']}</h4>
+    <?php echo $article['article_content']; ?>
+</div>
+<!-- 用户开始 -->
+<div class="footer-user">
+    <div class="main container">
+        <h3><span class="userCount text-orange" data-after="7125225" data-before="6965452">6,965,452</span>网店都在用豌豆推广，你还在等什么？</h3>
+    </div>
+    <div class="btn-wrap">
+        <a data-animate="animated bounceIn" class="btn btn-lg btn-orange btn-shadow" href="/login.html">免费体验</a>
+        <a data-animate="animated bounceIn" class="btn btn-lg btn-black btn-shadow" href="javascript:;" onclick="gotoDownload();">立即下载</a>
+    </div>
+</div>
+<!-- 用户结束 -->
+<!-- 底部开始 -->
+{include file='common/footer' /}
+<!-- 底部结束 -->
+
+<!-- 客服窗口开始 -->
+{include file='common/siderfixed' /}
+<!-- 客服窗口结束 -->
+
+</body>
+</html>

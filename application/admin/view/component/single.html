@@ -1,0 +1,120 @@
+{include  file="common/doc" /}
+<body>
+<!-- 正文开始 -->
+<style>
+    .layui-colla-title {
+        background-color: #FFFFFF;
+    }
+</style>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" id="form" lay-filter="form">
+                <div class="layui-collapse">
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title">基本信息录入</h2>
+                        <div class="layui-colla-content layui-show ">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">文章标题</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="single_title"  placeholder="请输入"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label">文章内容</label>
+                                <div class="layui-input-block">
+                                    <textarea  id="single_content" placeholder="请输入内容" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-colla-item">
+                        <h6 class="layui-colla-title">SEO</h6>
+                        <div class="layui-colla-content ">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">标题</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="title"  placeholder="请输入"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">关键字</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="keywords" r placeholder="请输入"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label">描述</label>
+                                <div class="layui-input-block">
+                                    <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-top:30px;">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="form_submit">保存</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index','tinymce', 'util','jquery','layedit','form'], function () {
+        var tinymce = layui.tinymce;
+        var form = layui.form;
+        var layedit = layui.layedit;
+        let parameter = location.search;
+        parameter = parameter.replace('?', '').split('&');
+        let parent_parameter = {};
+        parameter.forEach(function (item) {
+            let x = item.split('=');
+            parent_parameter[x[0]] = x[1];
+        });
+        var $ = layui.jquery;
+        console.log('参数');
+        console.log(parent_parameter);
+        console.log('参数');
+        $.get('/admin/single/read',parent_parameter,function(res){
+
+            if (res.data){
+                form.val('form',res.data);
+                $('#single_content').val(res.data['single_content']);
+            }
+
+            var content = tinymce.render({
+                elem: "#single_content",
+                height:600
+            });
+            form.on('submit(form_submit)', function(data){
+                data.field['single_content'] = content.getContent()
+                if (res.data){
+                    data.field['single_id'] = res.data['single_id'];
+                }
+                Object.assign(data.field,parent_parameter);
+                $.post('/admin/single/save', data.field, function (res) {
+                    if(res.code==0){
+                        layer.msg(res.msg);
+                    }
+                });
+                return false;
+            });
+        });
+
+    });
+</script>
+</body>
+</html>
+

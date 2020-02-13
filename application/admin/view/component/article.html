@@ -1,0 +1,317 @@
+{include  file="common/doc" /}
+<body>
+<!-- 正文开始 -->
+<style>
+    .layui-colla-title {
+        background-color: #FFFFFF;
+    }
+
+    .laytable-cell-1-0-3 {
+        text-align: center;
+        height: auto;
+        white-space: normal;
+    }
+</style>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header layuiadmin-card-header-auto layui-form" style="display: none;">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">文章标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="search" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <table id="table_list" lay-filter="table_list"></table>
+        </div>
+    </div>
+</div>
+
+<template id="table_toolbar">
+    <div class="layui-btn-group">
+        <button type="button" lay-event="add" class="layui-btn layui-btn-primary layui-btn-sm">
+            <i class="layui-icon layui-icon-add-1"></i>
+        </button>
+        <button type="button" lay-event="search_sh" class="layui-btn layui-btn-primary layui-btn-sm">
+            <i class="layui-icon layui-icon-search "></i>
+        </button>
+    </div>
+</template>
+
+<template id="form_template">
+    <form class="layui-form" action="" id="form" lay-filter="form" style="margin-top:10px;">
+
+        <div class="layui-collapse">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">基本信息录入</h2>
+                <div class="layui-colla-content layui-show ">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">文章标题</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="article_title" placeholder="请输入标题"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">封面图片</label>
+                        <div class="layui-input-block">
+                            <div class="layui-upload-drag" id="img">
+                                <i class="layui-icon"></i>
+                                <p>选择文件</p>
+                            </div>
+                        </div>
+                        <!--     <div class="layui-form-mid layui-word-aux">辅助字段</div>-->
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">文章简介</label>
+                        <div class="layui-input-block">
+                            <input type="hidden" name="img"/>
+                            <textarea name="article_intro" placeholder="请输入内容" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">显示</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="item" value="1" title="置项" checked>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">作者</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="article_author" placeholder="请输入标题"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">文章内容</label>
+                        <div class="layui-input-block">
+                            <textarea id="article_content" placeholder="请输入内容" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-colla-item">
+                <h6 class="layui-colla-title">SEO</h6>
+                <div class="layui-colla-content ">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">标题</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="title" placeholder="请输入标题"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">关键字</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="keywords" placeholder="请输入标题"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">描述</label>
+                        <div class="layui-input-block">
+                            <textarea name="description" placeholder="请输入内容" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top:30px;">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="form_submit">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</template>
+<script type="text/html" id="op_table">
+
+
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+            class="layui-icon layui-icon-edit"></i>编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+            class="layui-icon layui-icon-delete"></i>删除</a>
+</script>
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'jquery', 'form', 'tinymce', 'element', 'fileChoose'], function () {
+        let table = layui.table;
+        let $ = layui.jquery;
+        let form = layui.form;
+        let element = layui.element;
+        let tinymce = layui.tinymce;
+        let fileChoose = layui.fileChoose;
+        table.render({
+            elem: '#table_list'
+            , height: 'full-50'
+            , toolbar: '#table_toolbar'
+            , url: '/admin/article/read' + location.search //数据接口
+            , page: true //开启分页
+            , limit: 10
+            , cols: [
+                [ //表头
+                    {type: 'checkbox'},
+                    {type: 'numbers'}
+                    , {field: 'article_title', align: "center", title: '文章标题'}
+                    , {
+                    field: 'img',
+                    align: "center",
+                    title: '图片',
+                    templet: (d) => `<img  style="100px" src="${d.img}" />`
+                }
+                    , {field: 'addtime', title: '添加时间'}
+                    , {field: 'title', title: '标题'}
+                    , {field: 'description', title: '描述', align: "center", templet: '#sex'}
+                    , {field: 'keywords', title: '关键字', align: "center", templet: '#buttonTpl'}
+                    , {title: '操作', width: 150, align: 'center', fixed: 'right', toolbar: '#op_table'}
+                ]
+            ]
+        });
+
+
+        let parameter = location.search;
+        parameter = parameter.replace('?', '').split('&');
+        console.log(parameter);
+        let parent_parameter = {};
+        parameter.forEach(function (item) {
+            let x = item.split('=');
+            parent_parameter[x[0]] = x[1];
+        });
+
+        function render_file() {
+            $('#img').click(function () {
+                fileChoose.open({
+                    fileUrl: '',
+                    listUrl: '/admin/file/read',
+                    num: 1,
+                    dialog: {
+                        offset: '60px'
+                    },
+                    upload: {
+                        elem: '#file-btn-upload'
+                        , url: 'upload' //上传接口
+                        , done: function (res, index, upload) {
+                            layer.msg(res.msg, {'icon': 1});
+                            renderList();
+                        }
+                    },
+                    onChoose: function (urls) {
+
+                        $('#img').html(`<img src="${urls[0]['url']}">`);
+                        $('input[name="img"]').val(urls[0]['url']);
+                    }
+                });
+            });
+        }
+
+        table.on('toolbar(table_list)', function (obj) {
+            let event = obj.event;
+            if (event == 'add') {
+                layer.open({
+                    type: 1,
+                    title: '文章添加',
+                    area: ['1000px'],
+                    content: $('#form_template').html(),
+                    success: function (lay, index) {
+                        layer.full(index);
+                        render_file();
+                        form.render();
+                        element.render();
+                        var edit = tinymce.render({
+                            elem: "#article_content"
+                            , height: 600
+                        });
+                        form.on('submit(form_submit)', function (obj) {
+                            obj.field.article_content = edit.getContent();
+                            Object.assign(obj.field, parent_parameter);
+                            $.post('/admin/article/save', obj.field, function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    table.reload('table_list');
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+            if (event == 'search_sh') {
+                $('.layui-card-header').toggle('slow');
+            }
+        });
+
+        table.on('tool(table_list)', function (obj) {
+            let event = obj.event;
+            console.log(event);
+            if (event == 'edit') {
+                layer.open({
+                    type: 1,
+                    title: '文章编辑',
+                    content: $('#form_template').html(),
+                    success: function (lay, index) {
+                        layer.full(index);
+                        render_file();
+                        form.render();
+                        element.render();
+                        $('#article_content').val(obj.data.article_content);
+                        $('#img').html(`<img src="${obj.data.img}">`);
+                        var edit = tinymce.render({
+                            elem: "#article_content"
+                            , height: 600
+                        });
+                        form.val('form', obj.data);
+                        form.on('submit(form_submit)', function (res) {
+                            res.field['article_content'] = edit.getContent();
+                            res.field['article_id'] = obj.data['article_id'];
+                            Object.assign(res.field,parent_parameter);
+                            $.post('/admin/article/upd', res.field, function (res) {
+                                if (res.code !== 0) {
+                                    layer.msg(res.msg);
+                                } else {
+                                    layer.msg(res.msg);
+                                    layer.close(index);
+                                    table.reload('table_list');
+                                }
+                            });
+                            return false;
+                        });
+                    }
+                })
+            }
+
+            if (event == 'del') {
+                $.post('/admin/article/del', {article_id: obj.data['article_id']}, function (res) {
+                    obj.del();
+                    layer.msg(res.msg);
+                });
+            }
+        });
+        /*搜索*/
+        form.on('submit(search)', function (obj) {
+            table.reload('table_list', {
+                method: 'get',
+                where: obj.field //设定异步数据接口的额外参数
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>
+

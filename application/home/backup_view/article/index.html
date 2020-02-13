@@ -1,0 +1,63 @@
+{include file="common/doc" /}
+
+<style>
+
+  /*分页*/
+
+  .pagination {}
+
+  .pagination li {display: inline-block;margin-right: -1px;padding: 5px;border: 1px solid #e2e2e2;min-width: 20px;text-align: center;}
+
+  .pagination li.active {background: #009688;color: #fff;border: 1px solid #009688;}
+
+  .pagination li a {display: block;text-align: center;}
+  #newsPage ul{
+    margin: 0 auto;
+  }
+
+</style>
+
+<body>
+<!-- nav部分 -->
+{include  file="common/nav" /}
+
+  <!-- banner部分 -->
+{include  file="common/banner" /}
+<!-- banner部分 -->
+
+  <!-- main -->
+<div class="main-news">
+  <div class="layui-container">
+    <div class="layui-row layui-col-space20">
+      {volist name="list" id="vo"}
+      <div class="layui-col-lg6 content">
+        <div>
+          <div class="news-img"><a href="/home/article/detail/article_id/{$vo.article_id}"><img src="{$vo.img}"></a></div><div class="news-panel">
+          <strong><a href="/home/article/detail/article_id/{$vo.article_id}">{$vo.article_title}</a></strong>
+          <p class="detail"><span>{$vo.article_intro}</span><a href="/home/article/detail/article_id/{$vo.article_id}">[详细]</a></p>
+          <p class="read-push"><!--阅读 <span>120</span>&nbsp;-->&nbsp;&nbsp;&nbsp;发布时间：<span>{$vo.addtime}</span></p>
+        </div>
+        </div>
+      </div>
+      {/volist}
+    </div>
+    <div id="newsPage">
+      <?php  echo $page; ?>
+    </div>
+  </div>
+</div>
+ {include file="common/footer" /}
+<script src="/home/res/layui/layui.js"></script>
+<!--[if lt IE 9]>
+  <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+  <script src="https://cdn.staticfile.org/home/respond.js/1.4.2/home/respond.min.js"></script>
+<![endif]-->
+<script>
+  layui.config({
+    base: '/home/res/static/js/'
+  }).use('firm');
+</script>
+
+
+</body>
+</html>

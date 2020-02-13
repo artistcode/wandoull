@@ -1,0 +1,160 @@
+ {include file="common/head" /}
+<body>
+<div class="layui-fluid" style="background-color: #FFFFFF">
+
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">推广链接</li>
+            <li>推广好友</li>
+            <li>佣金明细</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <ul class="layui-timeline">
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text">
+                            <h3 class="layui-timeline-title">推广赚取佣金</h3>
+                            将您下方的专属推广链接发布到微博、<font color="red">微信、QQ、论坛、贴吧</font>等进行推荐、宣传和介绍注册使用！所有通过该链接注册的用户将永久成为您的推广好友！他的每一笔充值您都会获得5-8%的佣金！
+                        </div>
+                    </li>
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text">
+                            <h3 class="layui-timeline-title">推广链接 <font color="#6495ed">{$extension_url}</font><button class="layui-btn  layui-btn-sm layui-btn-radius">复制</button></h3>
+                            豌豆电商平台：一站式高质量流量、收藏和加购服务平台！安全稳定
+                            <br/>
+                            全网独家男女访客可选择、均带优质账户流量；高质量收藏加购！
+                            <br/>
+                            登录官网注册：<font color="#6495ed">ht∂tp://www.wandoull.com</font>
+                            <br/>
+                            注册免费领取500流量币体验，使用满意后再自助充值购买！
+                        </div>
+                    </li>
+                    <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                    <div class="layui-timeline-content layui-text">
+                        <h3 class="layui-timeline-title">佣金奖励（可提现支付宝）</h3>
+                        <table class="layui-table" style="text-align: center;">
+                            <tr >
+                                <td>会员级别</td>
+                                <td>普通会员</td>
+                                <td>vip会员</td>
+                            </tr>
+                            <tr>
+                                <td>佣金提成</td>
+                                <td>好友充值金额的5%</td>
+                                <td>好友充值金额的8%</td>
+                            </tr>
+                        </table>
+                    </div>
+                </li>
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text">
+                            <h3 class="layui-timeline-title">佣金规则</h3>
+                            1、只要注册豌豆电商平台即可邀请商家好友注册使用！会员级别越高佣金越多！
+                        <br/>
+                            2、如自己注册多个账户互相推荐，平台将视为自己推荐自己。不计算返利！
+                            <br/>
+                            3、邀请的每一名商家都是享受永久佣金提成奖励，只要商家在我们平台使用，每一笔充值您都有提成！
+                            <br/>
+                            4、每天花费十分钟推广，坚持两三个月，月入过万很轻松！算简单一个公式！
+                            <br/>
+                            如果好友每次充值您获得10%佣金计算：
+                            <br/>
+                            一天推广一个商家等于一个月30个商家！每一个商家一天花费100元，那你一个月佣金高达一万！
+                            <br/>
+                            30（商家数量）*100（每天充值）*10%（佣金比例）*30（一个月）=9000（月佣金接近一万）
+                            <br/>
+                            只要坚持推广，佣金轻松赚取！或许您一个月达不到，但是两个月、三个月呢！加油，梦想要坚持才有！
+                        </div>
+                    </li>
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text">
+                            <h3 class="layui-timeline-title">推广方法</h3>
+                            方法一：给您身边的电商好友发专属推广链接邀请注册使用；
+                            <br/>
+                            方法二：搜索关键词加群，找流量收藏等群、信誉或者卖家交流QQ群或者旺旺群，加进去发您的推广链接，效果是很好的；
+                            <br/>
+                            方法三：如果你有自己的博客，那在博客里添加一个自己的推广链接，也是不错的选择；
+                            <br/>
+                            方法四：在其他网站、论坛或贴吧贴上自己的推广链接，有人点击过来注册就是你的下线了；
+                            <br/>
+                            方法五：在微信、QQ、旺旺等多个社交工具可以联系商家介绍他们使用！
+                            <br/>
+                            方法六：去腾讯问问或者天涯问答去回答别人流量收藏之类的问题，加上你的推广链接
+                            <br/>
+                            方法七：推广方法很多，只要自己肯花点心思，就肯定有不错的效果！
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="layui-tab-item">
+                <table id="offline_table" lay-filter="offline_table"></table>
+            </div>
+            <div class="layui-tab-item">
+                <table id="brokerage_table" lay-filter="offline_table"></table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'laydate', 'table'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , table = layui.table
+            , laydate = layui.laydate;
+
+        /*下线*/
+        table.render({
+            elem: '#offline_table'
+            ,height: 'full-100'
+            ,url: 'offline' //数据接口
+            ,page: true //开启分页
+            ,cols: [[ //表头
+               {type: 'numbers' ,fixed: 'left',title:'#'}
+               // ,{field: 'username', title: '用户名'}
+                ,{field: 'level_name' ,align: "center" ,title: '会员级别'}
+                ,{field: 'phone' ,align: "center" ,title: '手机号'}
+                ,{field: 'currency' ,align: "center" ,title: '余额'}
+                ,{field: 'pay_count' ,align: "center" ,title: '购买次数'}
+                ,{field: 'brokerage_price' ,align: "center" ,title: '佣金'}
+                ,{field: 'last_time' ,align: "center" ,title: '访问日期'}
+                ,{field: 'last_ip' ,align: "center" ,title: 'ip'}
+            ]],
+        });
+
+        /*下线*/
+        table.render({
+            elem: '#brokerage_table'
+            ,height: 'full-100'
+            ,url: 'offline' //数据接口
+            ,page: true //开启分页
+            ,cols: [[ //表头
+                {type: 'numbers' ,fixed: 'left',title:'#'}
+                //,{field: 'username', title: '用户名'}
+                ,{field: 'level_name' ,align: "center" ,title: '会员级别'}
+                ,{field: 'phone' ,align: "center" ,title: '手机号'}
+                ,{field: 'currency' ,align: "center" ,title: '余额'}
+                ,{field: 'pay_count' ,align: "center" ,title: '购买次数'}
+                ,{field: 'brokerage_price' ,align: "center" ,title: '佣金'}
+                ,{field: 'last_time' ,align: "center" ,title: '访问日期'}
+                ,{field: 'last_ip' ,align: "center" ,title: 'ip'}
+
+            ]]
+        });
+
+
+    });
+</script>
+</body>
+</html>
